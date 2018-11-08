@@ -8,6 +8,8 @@ let player;
 let gameover = false;
 let cursors;
 
+let door;
+
 //import pic from '../../images/map';
 class GameScene extends Phaser.Scene {
     constructor(test) {
@@ -20,11 +22,13 @@ class GameScene extends Phaser.Scene {
         this.load.image('bg','../../images/map/bg.jpg');
         this.load.image('ground','../../images/map/ground.png');
         this.load.image('sao','../../images/map/sao.png');
-        this.load.image('shot path','../../images/map/short_path.png');
+        this.load.image('short_path','../../images/map/short_path.png');
         this.load.image('fire','../../images/map/fire.png');
         this.load.image('long_path','../../images/map/long_path.png');
         this.load.image('lamp_on','../../images/map/lamp_on.png');
         this.load.image('lamp_off','../../images/map/lamp_off.png');
+
+        this.load.image('door_close','../../images/door/door_close.png');
 
         this.load.spritesheet('yang','../../images/yang/ya1.png',{ frameWidth: 800, frameHeight: 600 } );
 
@@ -49,11 +53,21 @@ class GameScene extends Phaser.Scene {
 
         //platforms.create(400, 568, 'ground').setScale(2).refreshBody();
 
-        
-        platforms.create(10, 250, 'ground');
-        platforms.create(400, 250, 'ground');
+        platforms.create(10, 570, 'ground');
+        platforms.create(400, 570, 'ground');
 
-        player = this.physics.add.image(50, 400, 'yang').setScale(0.5);
+        platforms.create(x, 385, 'sao');
+        platforms.create(x, 225, 'long_path');
+        
+        platforms.create(100, y, 'long_path');
+        platforms.create(685, y, 'long_path');
+
+        platforms.create(290, 425, 'short_path');
+        platforms.create(510, 425, 'short_path');
+
+        door = this.add.image(x, 155, 'door_close');
+
+        player = this.physics.add.image(100, 400, 'yang').setScale(0.5);
 
         player.setBounce(0.2);
         player.setCollideWorldBounds(true);
@@ -70,21 +84,21 @@ class GameScene extends Phaser.Scene {
         player.setVelocityX(-160);
 
         // player.anims.play('left', true);
-    }
-        else if (cursors.right.isDown){
+    } else if (cursors.right.isDown){
         player.setVelocityX(160);
 
         // player.anims.play('right', true);
-    }
-        else{
+    } else{
         player.setVelocityX(0);
 
         // player.anims.play('turn');
     }
 
-        if (cursors.up.isDown && player.body.touching.down){
+        if (cursors.up.isDown && player.body.onFloor()){
         player.setVelocityY(-330);
     }
+
+
   }
 }
 

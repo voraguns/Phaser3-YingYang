@@ -18,7 +18,7 @@ const config = {
         }
     },
     scene: [
-        MainMenu,
+       // MainMenu,
         GameScene
     ]
 };
