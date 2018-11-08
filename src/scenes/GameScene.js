@@ -4,6 +4,9 @@ let y;
 let width;
 let height;
 let platforms;
+let player;
+let gameover = false;
+let cursors;
 
 //import pic from '../../images/map';
 class GameScene extends Phaser.Scene {
@@ -22,6 +25,8 @@ class GameScene extends Phaser.Scene {
         this.load.image('long_path','../../images/map/long_path.png');
         this.load.image('lamp_on','../../images/map/lamp_on.png');
         this.load.image('lamp_off','../../images/map/lamp_off.png');
+
+        this.load.spritesheet('yang','../../images/yang/ya1.png',{ frameWidth: 800, frameHeight: 600 } );
 
         
     }
@@ -42,18 +47,45 @@ class GameScene extends Phaser.Scene {
 
         platforms = this.physics.add.staticGroup();
 
-        platforms.create(400, 568, 'ground').setScale(2).refreshBody();
+        //platforms.create(400, 568, 'ground').setScale(2).refreshBody();
 
-        //platforms.create(600, 400, 'ground');
-        platforms.create(50, 250, 'ground');
-        //platforms.create(750, 220, 'ground');
+        
+        platforms.create(10, 250, 'ground');
+        platforms.create(400, 250, 'ground');
+
+        player = this.physics.add.image(50, 400, 'yang').setScale(0.5);
+
+        player.setBounce(0.2);
+        player.setCollideWorldBounds(true);
+
+        this.physics.add.collider(player, platforms);
+        cursors = this.input.keyboard.createCursorKeys();
+
 
         
     }
 
     update() {
+        if (cursors.left.isDown){
+        player.setVelocityX(-160);
 
+        // player.anims.play('left', true);
     }
+        else if (cursors.right.isDown){
+        player.setVelocityX(160);
+
+        // player.anims.play('right', true);
+    }
+        else{
+        player.setVelocityX(0);
+
+        // player.anims.play('turn');
+    }
+
+        if (cursors.up.isDown && player.body.touching.down){
+        player.setVelocityY(-330);
+    }
+  }
 }
 
 export default GameScene;
