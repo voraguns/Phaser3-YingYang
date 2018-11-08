@@ -1,5 +1,6 @@
 import 'phaser';
 import GameScene from './scenes/GameScene';
+import MainManu from './scenes/MainManu';
 
 const config = {
     // For more settings see <https://github.com/photonstorm/phaser/blob/master/src/boot/Config.js>
@@ -16,6 +17,7 @@ const config = {
         }
     },
     scene: [
+        MainManu,
         GameScene
     ]
 };
