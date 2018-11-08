@@ -1,4 +1,4 @@
-let playtext, cursors; 
+let playimage, cursors; 
 let x, y, width, height; 
  
 class MainMenu extends Phaser.Scene { 
@@ -7,16 +7,17 @@ class MainMenu extends Phaser.Scene {
         } 
     preload() { 
         this.load.image('bg', '../../images/map/bg.jpg'); 
-        this.load.image('start botton', '../../images/botton/start botton.png'); 
+        this.load.image('start_button', '../../images/button/start_button.png'); 
  
         } 
     create() { 
         width = this.scene.scene.physics.world.bounds.width; 
         height = this.scene.scene.physics.world.bounds.height; 
         x = width * 0.5; 
-        y = height * 0.5; 
+        y = height * 0.5;
+        this.add.image (x, y, 'bg');
         cursors = this.input.keyboard.createCursorKeys(); 
-        this.add.image (x,y,'start botton'); 
+        playimage = this.add.image (500, y,'start_button'); 
         playimage.setInteractive(); 
         playimage.on ('pointerup', () => { 
             this.scene.start ('GameScene'); 
