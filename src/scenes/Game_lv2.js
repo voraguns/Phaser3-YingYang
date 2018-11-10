@@ -21,6 +21,7 @@ let doorCheck = false;
 let switchbutton;
 let updownplatform;
 let platformisup = false;
+let fire;
 
 class GameScene extends Phaser.Scene {
     constructor(test) {
@@ -188,6 +189,18 @@ class GameScene extends Phaser.Scene {
         this.physics.add.overlap(player1, switchbutton, this.upPlatform);
         this.physics.add.overlap(player2, switchbutton, this.upPlatform);
 
+        fire = this.physics.add.group();
+        this.physics.add.collider(fire, platforms);
+        this.physics.add.collider(player1, player2, fire);
+
+        //this.physics.add.collider(diamond1, platforms);
+        this.physics.add.overlap(player1, fire, this.hitFire);
+        this.physics.add.overlap(player2, fire, this.hitFire);
+        //this.physics.add.overlap(player1, player2, this.nextLevel);
+
+
+        
+
         /*this.anims.create({
             key: 'left',
             frames: this.anims.generateFrameNumbers('yang', { start: 3, end: 5 }),
@@ -314,13 +327,7 @@ class GameScene extends Phaser.Scene {
         platformisup = true;
         console.log("platformisup = " + platformisup);
     }
-    slideSwitch(pointer, x, y){
-        // if (){
-        //     for(y = 0; y < 1; y++){
-
-        //     }
-        // }
-    }
+   
 
 }
 
