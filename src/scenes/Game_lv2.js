@@ -44,6 +44,7 @@ class GameScene extends Phaser.Scene {
         this.load.image('shadow', '../../images/map2_only/shadow.png');
         this.load.image('fog', '../../images/map2_only/fog.png');
         this.load.image('switch', '../../images/map2_only/switch.png');
+        this.load.image('updown', '../../images/map2_only/updown.png');
 
         this.load.spritesheet('yang', '../../images/yang/ya1.png', { frameWidth: 85, frameHeight: 113 }); //white
         this.load.spritesheet('ying', '../../images/ying/yi3.png', { frameWidth: 80, frameHeight: 90 }); //black
@@ -83,7 +84,7 @@ class GameScene extends Phaser.Scene {
 
         platforms.create(x, 500, 'fire');
 
-        platforms.create(100, 450, 'short_path');
+        platforms.create(100, 400, 'updown');
 
         door = this.add.sprite(750, 485, 'door');
 
@@ -115,7 +116,7 @@ class GameScene extends Phaser.Scene {
         diamond1 = this.physics.add.group({
             key: 'diamond1',
             repeat: 1,
-            setXY: { x: 12, y: 50, stepX: 500, stepY: 250 }
+            setXY: { x: 12, y: 50, stepX: 680, stepY: 50 }
 
         });
 
@@ -130,12 +131,12 @@ class GameScene extends Phaser.Scene {
         //diamond2
         diamond2 = this.physics.add.group();
         this.physics.add.collider(diamond2, platforms);
-        this.physics.add.collider(player2, diamond2);
+        this.physics.add.collider(player2, diamond1);
 
         diamond2 = this.physics.add.group({
             key: 'diamond2',
             repeat: 0,
-            setXY: { x: 12, y: 50, stepX: 500, stepY: 200 }
+            setXY: { x: 700, y: 500, stepX: 0 }
 
         });      
 
@@ -147,12 +148,12 @@ class GameScene extends Phaser.Scene {
         //diamond3
         diamond3 = this.physics.add.group();
         this.physics.add.collider(diamond3, platforms);
-        this.physics.add.collider(player1, diamond1);
+        this.physics.add.collider(player1, diamond2);
 
         diamond3 = this.physics.add.group({
             key: 'diamond3',
             repeat: 0,
-            setXY: { x: 0, y: 600, stepX: 700 }
+            setXY: { x: 0, y: 600, stepX: 800 }
 
         });
 
@@ -249,13 +250,15 @@ class GameScene extends Phaser.Scene {
             player2.setVelocityY(-330);
         }
         if (doorCheck === true) {
-            this.scene.start('Game_lv2');
+            this.scene.start('Game_lv3');
         }
-        
+
+        if (gameover == true) {
+            this.physics.pause();
+        }
 
     }
     collectDiamond(player1, diamondtmep) {
-
         diamondtmep.disableBody(true, true);
         //diamond2.disableBody(true, true);
 
@@ -265,12 +268,19 @@ class GameScene extends Phaser.Scene {
         }
     }
     nextLevel(player1, player2, door) {
-
         if (diamond1.countActive(true) === 0) {
             doorCheck = true;
         }
-
     }
+    hitFire(player1, player2, fire) {
+        gameover = true;
+    }
+    slideSwitch(pointer, x, y){
+        if (){
+
+        }
+    }
+
 }
 
 export default GameScene;

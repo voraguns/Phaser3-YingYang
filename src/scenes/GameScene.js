@@ -42,8 +42,8 @@ class GameScene extends Phaser.Scene {
 
         this.load.image('fire', '../../images/map/fire.png');
 
-        this.load.spritesheet('yang', '../../images/yang/ya1.png', { frameWidth: 85, frameHeight: 113 });
-        this.load.spritesheet('ying', '../../images/ying/yi1.png', { frameWidth: 80, frameHeight: 107 });
+        this.load.spritesheet('yang', '../../images/yang/walk1.png', { frameWidth: 80, frameHeight: 84 });
+        this.load.spritesheet('ying', '../../images/ying/walk.png', { frameWidth: 80, frameHeight: 107 });
 
 
     }
@@ -148,31 +148,31 @@ class GameScene extends Phaser.Scene {
             frameRate: 10
         });
 
-
-        /*this.anims.create({
+        //anime yang
+        this.anims.create({
             key: 'left',
             frames: this.anims.generateFrameNumbers('yang', { start: 3, end: 5 }),
             frameRate: 10,
             repeat: -1
-        });*/
+        });
 
         /* this.anims.create({
             key: 'turn',
             frames: [{ key: 'beaver', frame: 4 }],
             frameRate: 20
-        }); */
+        }); */ 
 
-        /*this.anims.create({
+        this.anims.create({
             key: 'right',
-            frames: this.anims.generateFrameNumbers('player1', { start: 3, end: 5 }),
+            frames: this.anims.generateFrameNumbers('yang', { start: 0, end: 2 }),
             frameRate: 10,
             repeat: -1
         });
 
-        //anime yang
+        //anime ying
         this.anims.create({
             key: 'keyA',
-            frames: this.anims.generateFrameNumbers('player2', { start: 3, end: 5 }),
+            frames: this.anims.generateFrameNumbers('ying', { start: 3, end: 5 }),
             frameRate: 10,
             repeat: -1
         });
@@ -183,12 +183,12 @@ class GameScene extends Phaser.Scene {
             frameRate: 20
         }); */
 
-        /* this.anims.create({
+        this.anims.create({
              key: 'keyD',
-             frames: this.anims.generateFrameNumbers('player2', { start: 0, end: 2 }),
+             frames: this.anims.generateFrameNumbers('ying', { start: 0, end: 2 }),
              frameRate: 10,
              repeat: -1
-         });*/
+         });
 
     }
 
