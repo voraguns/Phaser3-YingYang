@@ -42,7 +42,7 @@ class GameScene extends Phaser.Scene {
 
         this.load.image('fire', '../../images/map/fire.png');
 
-        this.load.spritesheet('yang', '../../images/yang/walk1.png', { frameWidth: 80, frameHeight: 84 });
+        this.load.spritesheet('yang', '../../images/yang/walk1.png', { frameWidth: 80, frameHeight:107 });
         this.load.spritesheet('ying', '../../images/ying/walk.png', { frameWidth: 80, frameHeight: 107 });
 
 
@@ -127,7 +127,7 @@ class GameScene extends Phaser.Scene {
 
         diamond2 = this.physics.add.group({
             key: 'diamond2',
-            repeat: 0,
+            repeat: 1,
             setXY: { x: 700, y: 500, stepX: 0 }
 
         });

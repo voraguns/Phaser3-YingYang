@@ -95,8 +95,13 @@ class GameScene extends Phaser.Scene {
 
         //สวิตช์กับแพลตฟอร์ม
         switchbutton = this.physics.add.staticImage(750, 333, 'switch');
-        updownplatform = this.physics.add.staticGroup();
-        updownplatform.create(100, 400, 'updown');
+        updownplatform = this.physics.add.staticGroup({
+            key: 'updown',
+            repeat: 0,
+            setXY: { x: 100, y: 400 }
+
+        });
+        //updownplatform.create(100, 400, 'updown');
 
         door = this.add.sprite(750, 485, 'door');
 
@@ -126,23 +131,23 @@ class GameScene extends Phaser.Scene {
         this.physics.add.collider(diamond1, platforms);
         this.physics.add.collider(player1, diamond1);
 
-        diamond1 = this.physics.add.group({
+        diamond1 = this.physics.add.staticGroup({
             key: 'diamond1',
             repeat: 1,
-            setXY: { x: 12, y: 50, stepX: 680, stepY: 50 }
+            setXY: { x: 12, y: 70, stepX: 680, stepY: 250 }
 
         });
 
-        diamond1.children.iterate(function (child) {
-            child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.6));
-        });
+        //diamond1.children.iterate(function (child) {
+           // child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.6));
+        //});
 
-        this.physics.add.collider(diamond1, platforms);
+        //this.physics.add.collider(diamond1, platforms);
         this.physics.add.overlap(player1, diamond1, this.collectDiamond);
         this.physics.add.overlap(player1, player2, this.nextLevel);
 
         //diamond2
-        diamond2 = this.physics.add.group();
+        /*diamond2 = this.physics.add.group();
         this.physics.add.collider(diamond2, platforms);
         this.physics.add.collider(player2, diamond1);
 
@@ -175,7 +180,7 @@ class GameScene extends Phaser.Scene {
             child.disableBody(true, true)
         });
 
-        this.physics.add.collider(diamond3, platforms);
+        this.physics.add.collider(diamond3, platforms);*/
         this.physics.add.overlap(player1, diamond2, this.collectDiamond);
 
         //door anime
