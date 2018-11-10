@@ -1,3 +1,5 @@
+import { format } from "path";
+
 let x;
 let y;
 let width;
@@ -276,9 +278,11 @@ class GameScene extends Phaser.Scene {
         gameover = true;
     }
     slideSwitch(pointer, x, y){
-        if (){
+        // if (){
+        //     for(y = 0; y < 1; y++){
 
-        }
+        //     }
+        // }
     }
 
 }

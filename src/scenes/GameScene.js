@@ -225,7 +225,7 @@ class GameScene extends Phaser.Scene {
             player2.setVelocityY(-330);
         }
         if (doorCheck === true) {
-            this.scene.start('Game_lv2');
+            this.scene.start('Game_lv2', true);
         }
     }
     collectDiamond(player1, diamondtmep) {
@@ -237,20 +237,13 @@ class GameScene extends Phaser.Scene {
             door.anims.play('doors', true);
             this.nextLevel;
         }
-
-
-
     }
     nextLevel(player1, player2, door) {
-
         if (diamond1.countActive(true) === 0) {
             doorCheck = true;
         }
 
     }
 }
-
-
-
 
 export default GameScene;
