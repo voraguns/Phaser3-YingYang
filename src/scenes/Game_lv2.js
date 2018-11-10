@@ -18,6 +18,10 @@ let diamond2;
 let diamond3;
 let doorCheck = false;
 
+let switchbutton;
+let updownplatform;
+let platformisup = false;
+
 class GameScene extends Phaser.Scene {
     constructor(test) {
         super({
@@ -82,11 +86,16 @@ class GameScene extends Phaser.Scene {
 
         platforms.create(100, 100, 'long_path');        
         platforms.create(750, 350, 'short_path');
-        platforms.create(750, 335, 'switch');
+        //platforms.create(750, 335, 'switch');
 
         platforms.create(x, 500, 'fire');
 
-        platforms.create(100, 400, 'updown');
+        //platforms.create(100, 400, 'updown');
+
+        //สวิตช์กับแพลตฟอร์ม
+        switchbutton = this.physics.add.staticImage(750, 333, 'switch');
+        updownplatform = this.physics.add.staticGroup();
+        updownplatform.create(100, 400, 'updown');
 
         door = this.add.sprite(750, 485, 'door');
 
@@ -99,10 +108,11 @@ class GameScene extends Phaser.Scene {
         player2.setBounce(0.2);
         player2.setCollideWorldBounds(true);
 
-
-
         this.physics.add.collider(player1, platforms);
         this.physics.add.collider(player2, platforms);
+
+        this.physics.add.collider(player1, updownplatform);
+        this.physics.add.collider(player2, updownplatform);
 
         cursors = this.input.keyboard.createCursorKeys();
 
@@ -164,7 +174,6 @@ class GameScene extends Phaser.Scene {
             child.disableBody(true, true)
         });
 
-
         this.physics.add.collider(diamond3, platforms);
         this.physics.add.overlap(player1, diamond2, this.collectDiamond);
 
@@ -174,6 +183,10 @@ class GameScene extends Phaser.Scene {
             frames: this.anims.generateFrameNumbers('door', { start: 0, end: 4 }),
             frameRate: 10
         });
+
+        //เหยียบสวิตช์
+        this.physics.add.overlap(player1, switchbutton, this.upPlatform);
+        this.physics.add.overlap(player2, switchbutton, this.upPlatform);
 
         /*this.anims.create({
             key: 'left',
@@ -259,6 +272,24 @@ class GameScene extends Phaser.Scene {
             this.physics.pause();
         }
 
+        //100, 400
+        if(platformisup == true){
+            if(updownplatform.y <= 200){
+                updownplatform.y = 200;
+            } else {
+                updownplatform.y--;
+            }
+        } else {
+            if(updownplatform.y >= 400){
+                updownplatform.y = 400;
+            } else {
+                updownplatform.y++;
+            }
+        }
+
+        //ยังหาค่า y ของ updownplatform ไม่เจอ น่าจะต้องแก้ตัว updownplatform เป็น Object ชนิดอื่น
+        //เอาคอมเม้นต์ออกจะเห็นว่าเป็น NaN คือไม่มีค่านั่นแหละ
+        //console.log("updownplatform.y = " + updownplatform.y);
     }
     collectDiamond(player1, diamondtmep) {
         diamondtmep.disableBody(true, true);
@@ -276,6 +307,12 @@ class GameScene extends Phaser.Scene {
     }
     hitFire(player1, player2, fire) {
         gameover = true;
+    }
+    upPlatform(player, switchbutton){
+        //เช็กได้ละว่าปุ่มถูกเหยียบ
+        console.log("platformisup = " + platformisup);
+        platformisup = true;
+        console.log("platformisup = " + platformisup);
     }
     slideSwitch(pointer, x, y){
         // if (){
