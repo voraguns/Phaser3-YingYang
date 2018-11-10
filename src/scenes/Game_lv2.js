@@ -18,13 +18,33 @@ class GameScene extends Phaser.Scene {
         this.load.image('door_close','../../images/door/door_close.png');
 
         this.load.image('diamond','../../images/items/diamond.png');
+        this.load.image('diamond1','../../images/items/diamond.png');
+        this.load.image('diamond2','../../images/items/diamond.png');
 
-        this.load.spritesheet('yang','../../images/yang/ya1.png',{ frameWidth: 800, frameHeight: 600 } );
+        this.load.image('fire','../../images/map/fire.png');
+
+        this.load.spritesheet('yang','../../images/yang/ya1.png',{ frameWidth: 85, frameHeight: 113 } );
+        this.load.spritesheet('ying','../../images/ying/yi1.png',{ frameWidth: 80, frameHeight: 107 } );
 
     
     }
 
     create() {
+        width = this.scene.scene.physics.world.bounds.width;
+        height = this.scene.scene.physics.world.bounds.height;
+        x = width * 0.5;
+        y = height * 0.5;
+
+        this.add.image(x, y, 'bg');
+        width = this.scene.scene.physics.world.bounds.width;
+        height = this.scene.scene.physics.world.bounds.height;
+        x = width * 0.5;
+        y = height * 0.5;
+
+        this.add.image(x, y, 'bg');
+
+        platforms = this.physics.add.staticGroup();
+
         
     }
 

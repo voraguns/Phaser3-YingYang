@@ -39,10 +39,10 @@ class GameScene extends Phaser.Scene {
         this.load.image('diamond1','../../images/items/diamond.png');
         this.load.image('diamond2','../../images/items/diamond.png');
 
-        this.load.image('fire','../../images/trap/fire.png');
+        this.load.image('fire','../../images/map/fire.png');
 
-        this.load.spritesheet('yang','../../images/yang/walkyaa.png',{ frameWidth: 85, frameHeight: 57 } );
-        this.load.spritesheet('ying','../../images/ying/walkying_no_effect.png',{ frameWidth: 85, frameHeight: 57 } );
+        this.load.spritesheet('yang','../../images/yang/ya1.png',{ frameWidth: 85, frameHeight: 113 } );
+        this.load.spritesheet('ying','../../images/ying/yi1.png',{ frameWidth: 80, frameHeight: 107 } );
 
         
     }
@@ -101,36 +101,49 @@ class GameScene extends Phaser.Scene {
         this.keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
         this.keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
 
-        // this.physics.add.collider(diamond1, platforms);
-
-        // this.physics.add.overlap(player1, diamond1, collectDiamond);
-
-        /* diamond1 = this.physics.add.group();
+        diamond1 = this.physics.add.group();
         this.physics.add.collider(diamond1, platforms);
-        this.physics.add.collider(player1, diamond1); */
+        this.physics.add.collider(player1, diamond1); 
         
         diamond1 = this.physics.add.group({
-            key: 'diamond1'
+            key: 'diamond1',
+            repeat: 0,
+            setXY: { x: 12, y: 0, stepX: 0 }
+
         });
-
-        diamond2 = this.physics.add.group({
-            key: 'diamond2'
-        });        
-
+     
         diamond1.children.iterate(function (child) {
             child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.6));
         });
 
+        this.physics.add.collider(diamond1, platforms);
+        this.physics.add.overlap(player1, diamond1, collectDiamond);
+
+        //diamond2
+        diamond2 = this.physics.add.group();
+        this.physics.add.collider(diamond2, platforms);
+        this.physics.add.collider(player2, diamond1); 
+        
+        diamond1 = this.physics.add.group({
+            key: 'diamond2',
+            repeat: 0,
+            setXY: { x: 12, y: 50, stepX: 0 }
+
+        });
+     
         diamond2.children.iterate(function (child) {
             child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.6));
         });
 
-        this.anims.create({
+        this.physics.add.collider(diamond2, platforms);
+        this.physics.add.overlap(player1, diamond1, collectDiamond);
+
+        /*this.anims.create({
             key: 'left',
             frames: this.anims.generateFrameNumbers('player1', { start: 0, end: 2 }),
             frameRate: 10,
             repeat: -1
-        });
+        });*/
 
         /* this.anims.create({
             key: 'turn',
@@ -138,7 +151,7 @@ class GameScene extends Phaser.Scene {
             frameRate: 20
         }); */
 
-        this.anims.create({
+        /*this.anims.create({
             key: 'right',
             frames: this.anims.generateFrameNumbers('player1', { start: 3, end: 5 }),
             frameRate: 10,
@@ -159,26 +172,25 @@ class GameScene extends Phaser.Scene {
             frameRate: 20
         }); */
 
-        this.anims.create({
+       /* this.anims.create({
             key: 'keyD',
             frames: this.anims.generateFrameNumbers('player2', { start: 0, end: 2 }),
             frameRate: 10,
             repeat: -1
-        });
+        });*/
     }
 
     update() {
         if (cursors.left.isDown){
         player1.setVelocityX(-160);
-        player1.anims.play('left', true);
+        //player1.anims.play('left', true);
     } else if (cursors.right.isDown){
         player1.setVelocityX(160);
-        player1.anims.play('right', true);
+        //player1.anims.play('right', true);
 
     } else{
         player1.setVelocityX(0);
-        
-
+      
     }
         if (cursors.up.isDown && player1.body.onFloor()){
         player1.setVelocityY(-330);
@@ -188,11 +200,11 @@ class GameScene extends Phaser.Scene {
     //control ying
     if (this.keyA.isDown) {
         player2.setVelocityX(-160);       
-        player2.anims.play('keyA', true);
+        //player2.anims.play('keyA', true);
 
     } else if (this.keyD.isDown){
         player2.setVelocityX(160);
-        player2.anims.play('keyD', true);
+        //player2.anims.play('keyD', true);
 
     } else{
         player2.setVelocityX(0);
@@ -203,8 +215,8 @@ class GameScene extends Phaser.Scene {
   }
 }
 
-    function collectDiamond(player1, diamond) {
-    diamond.disableBody(true, true);
+   function collectDiamond(player1, diamond1) {
+    diamond1.disableBody(true, true);
   } 
 
 
