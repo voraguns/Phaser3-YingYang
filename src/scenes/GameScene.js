@@ -125,12 +125,12 @@ class GameScene extends Phaser.Scene {
             });
 
             playimage6 = this.add.image(380,410, 'menu');
+            playimage6.setInteractive();
+            playimage6.on ('pointerup', () => {
+                this.scene.start('Map1');
+            });
         });
         
-        
-        
-        
-    
         this.keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
         this.keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
         this.keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
