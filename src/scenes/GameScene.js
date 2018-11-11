@@ -8,6 +8,7 @@ let player;
 let gameover = false;
 let cursors;
 let playimage1, playimage2, playimage3, playimage4, playimage5, playimage6;
+let hitted = false;
 
 let player1;
 let player2;
@@ -87,7 +88,7 @@ class GameScene extends Phaser.Scene {
         platforms.create(290, 425, 'short_path');
         platforms.create(510, 425, 'short_path');
 
-        door = this.add.sprite(x, 155, 'door');
+        door = this.physics.add.staticSprite(x, 155, 'door'); 
 
         player1 = this.physics.add.sprite(50, 400, 'yang').setScale(0.5);
         player2 = this.physics.add.sprite(750, 400, 'ying').setScale(0.75);
@@ -99,7 +100,7 @@ class GameScene extends Phaser.Scene {
         player2.setCollideWorldBounds(true);
 
 
-
+        this.physics.add.collider(door,platforms);
         this.physics.add.collider(player1, platforms);
         this.physics.add.collider(player2, platforms);
 
@@ -135,32 +136,37 @@ class GameScene extends Phaser.Scene {
         this.keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
         this.keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
 
-        diamond1 = this.physics.add.group();
+        diamond1 = this.physics.add.staticGroup();
         this.physics.add.collider(diamond1, platforms);
         this.physics.add.collider(player1, diamond1);
 
         //diamond1
-        diamond1 = this.physics.add.group({
+        diamond1 = this.physics.add.staticGroup({
             key: 'diamond1',
             repeat: 1,
-            setXY: { x: 12, y: 250, stepX: 500, stepY: 250 }
+            setXY: { x: 12, y: 270, stepX: 500, stepY: 250 }
 
         });
 
-        diamond1.children.iterate(function (child) {
+        /*diamond1.children.iterate(function (child) {
             child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.6));
-        });
+        });*/
+
+        // this.physics.add.collider(player1,door);
+        // this.physics.add.collider(player2,door);
 
         this.physics.add.collider(diamond1, platforms);
+        this.physics.add.overlap(player1, door, player1Crash);
+        this.physics.add.overlap(player2, door, player2Crash);
         this.physics.add.overlap(player1, diamond1, this.collectDiamond);
-        this.physics.add.overlap(player1, player2, this.nextLevel);
+        this.physics.add.overlap(player1,player2, this.nextLevel);
 
         //diamond2
         diamond2 = this.physics.add.group();
         this.physics.add.collider(diamond2, platforms);
-        this.physics.add.collider(player2, diamond1);
+        //this.physics.add.collider(player2, diamond1);
 
-        diamond2 = this.physics.add.group({
+        /*diamond2 = this.physics.add.group({
             key: 'diamond2',
             repeat: 1,
             setXY: { x: 700, y: 500, stepX: 0 }
@@ -174,7 +180,7 @@ class GameScene extends Phaser.Scene {
 
 
         this.physics.add.collider(diamond2, platforms);
-        this.physics.add.overlap(player1, diamond2, this.collectDiamond);
+        this.physics.add.overlap(player1, diamond2, this.collectDiamond);*/
 
         //door anime
         this.anims.create({
@@ -259,7 +265,8 @@ class GameScene extends Phaser.Scene {
         if (this.keyW.isDown && player2.body.onFloor()) {
             player2.setVelocityY(-330);
         }
-        if (doorCheck === true) {
+        if (doorCheck === true && pc1 === true && pc2 === true) {
+            // if ()
             this.scene.start('Game_lv2', true);
         }
     }
@@ -267,27 +274,37 @@ class GameScene extends Phaser.Scene {
 
         diamondtmep.disableBody(true, true);
         //diamond2.disableBody(true, true);
-
-        if (diamond1.countActive(true) === 0) {
+        
+        if (diamond1.countActive(true) === 0 ) {
             door.anims.play('doors', true);
-            this.nextLevel;
+            //doorCheck === true;
         }
     }
-    nextLevel(player1, player2, door) {
+    nextLevel( player1 ,player2, door) {
         if (diamond1.countActive(true) === 0) {
             doorCheck = true;
         }
-
+        
     }
-
+    /* hitdoor(player1,door){
+        player1.collider(player1,door)
+        hitted = true;
+    }*/
     
-  
+}
+
+/*function hitDoor(player1,door){ 
+    player2.collider(player1,door)
+}*/
+
+function hitDoor(player1, door) {
+    console.log("hit")
 }
 
 function hitFire(player, fire) {
     player.setTint(0xff0000);
     player.anims.play('turn');
-
+    
     gameover = true;
 }
 
@@ -300,3 +317,14 @@ function clickHandler () {
 }
 
 export default GameScene;
+
+
+let pc1 = false;
+let pc2 = false;
+// let playerCrash;
+function player1Crash(player1, door){
+    pc1 = true;
+}
+function player2Crash(player2, door){
+    pc2 = true
+}
