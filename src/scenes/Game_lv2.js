@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import { format } from "path";
 
 let x;
@@ -345,7 +344,6 @@ function hitFire(player1, fire) {
 }
 
 
-=======
 import { format } from "path";
 
 let x;
@@ -692,5 +690,4 @@ function hitFire(player1, fire) {
 }
 
 
->>>>>>> master
 export default GameScene;

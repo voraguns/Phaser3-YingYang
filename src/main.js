@@ -1,5 +1,5 @@
 import 'phaser';
-import GameScene from './scenes/GameScene';
+//import GameScene from './scenes/GameScene';
 import MainMenu from './scenes/MainMenu';
 import Game_lv2 from './scenes/Game_lv2';
 import Game_lv3 from './scenes/Game_lv3';
@@ -20,17 +20,10 @@ const config = {
         }
     },
     scene: [
-<<<<<<< HEAD
-       //MainMenu
-       //GameScene
-       //Game_lv2
-       Game_lv3
-=======
-       MainMenu,
-       GameScene
-       Game_lv2
-       //Game_lv3
->>>>>>> master
+      MainMenu,
+      GameScene,
+      //Game_lv2,
+      //Game_lv3,
     ]
 };
 
