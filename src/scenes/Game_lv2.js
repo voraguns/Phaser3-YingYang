@@ -8,6 +8,7 @@ let platforms;
 let player;
 let gameover = false;
 let cursors;
+let ov = false;
 
 let player1;
 let player2;
@@ -22,6 +23,7 @@ let switchbutton;
 let updownplatform;
 let platformisup = false;
 let fire;
+let shadow;
 
 class GameScene extends Phaser.Scene {
     constructor(test) {
@@ -52,6 +54,7 @@ class GameScene extends Phaser.Scene {
         this.load.image('fog', '../../images/map2_only/fog.png');
         this.load.image('switch', '../../images/map2_only/switch.png');
         this.load.image('updown', '../../images/map2_only/updown.png');
+        this.load.image('over','../../images/gameov/game over.png')
 
         this.load.spritesheet('yang', '../../images/yang/ya1.png', { frameWidth: 85, frameHeight: 113 }); //white
         this.load.spritesheet('ying', '../../images/ying/yi3.png', { frameWidth: 80, frameHeight: 90 }); //black
@@ -65,15 +68,19 @@ class GameScene extends Phaser.Scene {
         let x = width * 0.5;
         let y = height * 0.5;
 
+        //this.add.image(x,y,'over');
+
         this.add.image(x, y, 'bg');
         width = this.scene.scene.physics.world.bounds.width;
         height = this.scene.scene.physics.world.bounds.height;
         x = width * 0.5;
         y = height * 0.5;
 
-        this.add.image(x, y, 'bg');
+        //this.add.image(x, y, 'bg');
 
         let platforms = this.physics.add.staticGroup();
+
+        
 
         platforms.create(10, 570, 'ground');
         platforms.create(400, 570, 'ground');
@@ -81,12 +88,13 @@ class GameScene extends Phaser.Scene {
         platforms.create(x, 400, 'long_path');
         platforms.create(x, 200, 'long_path');
 
-        platforms.create(x, 240, 'lamp_off');
+        //platforms.create(x, 240, 'lamp_off');
         // this.add.image(x, y, 'fog');
-        this.add.image(x, y, 'shadow');
+        //this.add.image(x, y, 'shadow');
 
         platforms.create(100, 100, 'long_path');
         platforms.create(750, 350, 'short_path');
+        
         //platforms.create(750, 335, 'switch');
 
 
@@ -97,7 +105,7 @@ class GameScene extends Phaser.Scene {
         updownplatform = this.physics.add.sprite(100, 200, 'updown')
         console.log(updownplatform.body.allowGravity = false)
         //updownplatform.create(100, 400, 'updown');
-
+        updownplatform.setCollideWorldBounds(true);
         door = this.add.sprite(750, 485, 'door');
 
         player1 = this.physics.add.image(100, 500, 'yang').setScale(0.5); //white
@@ -189,6 +197,10 @@ class GameScene extends Phaser.Scene {
         this.physics.add.overlap(player1, switchbutton, this.upPlatform);
         this.physics.add.overlap(player2, switchbutton, this.upPlatform);
         //console.log(switchbutton.onOverlap)
+
+        shadow = this.physics.add.staticImage(x,y,'shadow');
+        this.physics.add.collider(player1,shadow,hitShadow);
+
         fire = this.physics.add.image(400, 400, 'fire');
         this.physics.add.collider(fire, platforms);
 
@@ -248,6 +260,7 @@ class GameScene extends Phaser.Scene {
 
          console.log(updownplatform)
 
+         //platforms.create(400,300,'over');
     }
 
     update() {
@@ -336,6 +349,11 @@ class GameScene extends Phaser.Scene {
     }
 
 
+}
+
+function hitShadow(player1,shadow){
+    console.log("hits")
+    gameover = true;
 }
 
 function hitFire(player1, fire) {
