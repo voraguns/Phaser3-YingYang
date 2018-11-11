@@ -14,6 +14,8 @@ let player2;
 let door;
 let diamond1;
 let diamond2;
+let dark_diamond1;
+let dark_diamond2;
 let doorCheck = false;
 
 let switchbutton;
@@ -43,7 +45,10 @@ class GameScene extends Phaser.Scene {
         this.load.image('diamond', '../../images/items/diamond.png');
         this.load.image('diamond1', '../../images/items/diamond.png');
         this.load.image('diamond2', '../../images/items/diamond.png');
-        
+
+        this.load.image('diamond', '../../images/items/dark_diamond.png');
+        this.load.image('dark_diamond1', '../../images/items/dark_diamond.png');
+        this.load.image('dark_diamond2', '../../images/items/dark_diamond.png');      
 
         this.load.image('fire', '../../images/map/fire.png');
         this.load.image('shadow', '../../images/map2_only/shadow.png');
@@ -54,13 +59,15 @@ class GameScene extends Phaser.Scene {
         this.load.image('fog31', '../../images/map3_only/fog31.png');
         this.load.image('fog32', '../../images/map3_only/fog32.png');
         this.load.image('obstacle', '../../images/map3_only/obstacle.png');
+        this.load.image('short_obstacle', '../../images/map3_only/short_obstacle.png');
+        this.load.image('short_obstacle2', '../../images/map3_only/short_obstacle2.png');
         this.load.image('top', '../../images/map3_only/top.png');
         this.load.image('switch_uo_down', '../../images/map3_only/switch_uo_down.png');
         this.load.image('shadow31', '../../images/map3_only/shadow31.png');
         this.load.image('shadow32', '../../images/map3_only/shadow32.png');
 
         this.load.spritesheet('yang', '../../images/yang/walk1.png', { frameWidth: 78, frameHeight: 84 }); //white
-        this.load.spritesheet('ying', '../../images/ying/walk.png', { frameWidth: 80, frameHeight: 107 }); //black
+        this.load.spritesheet('ying', '../../images/ying/walk.png', { frameWidth: 80, frameHeight: 84 }); //black
         
     }
 
@@ -90,16 +97,19 @@ class GameScene extends Phaser.Scene {
         platforms.create(30, 390, 'short_path');
         platforms.create(30, 170, 'short_path');
         
-        platforms.create(250, 20, 'obstacle');
+        //platforms.create(250, 20, 'obstacle');
         platforms.create(250, 10, 'top');  
         
-        platforms.create(500, 420, 'long_path');
-        platforms.create(590, 420, 'long_path');
-        platforms.create(700, 420, 'long_path');
+        platforms.create(500, 400, 'long_path');
+        platforms.create(590, 400, 'long_path');
+        platforms.create(700, 400, 'long_path');
 
         platforms.create(600, 320, 'long_path');
+        platforms.create(580, 270, 'short_obstacle2');
         platforms.create(500, 120, 'long_path');
         platforms.create(700, 220, 'long_path');
+
+        //platforms.create(580, 270, 'short_obstacle2');
 
         //platforms.create(700, 250, 'long_path');
 
@@ -126,12 +136,8 @@ class GameScene extends Phaser.Scene {
 
         //สวิตช์กับแพลตฟอร์ม
         switchbutton = this.physics.add.staticImage(600, 540, 'switch');
-        obstacleplatform = this.physics.add.staticGroup({
-            key: 'obstacle',
-            repeat: 0,
-            setXY: { x: 250, y: 20 }
-
-        });
+        obstacleplatform = this.physics.add.sprite(250, 90, 'short_obstacle')
+        console.log(obstacleplatform.body.allowGravity = false)
 
         this.physics.add.collider(player1, obstacleplatform);
         this.physics.add.collider(player2, obstacleplatform);
@@ -160,7 +166,7 @@ class GameScene extends Phaser.Scene {
 
         this.physics.add.collider(diamond1, platforms);
         this.physics.add.overlap(player1, diamond1, this.collectDiamond);
-        this.physics.add.overlap(player1, player2, this.nextLevel);
+        //this.physics.add.overlap(player1, player2, this.nextLevel);
 
         //diamond2
         diamond2 = this.physics.add.group();
@@ -182,6 +188,52 @@ class GameScene extends Phaser.Scene {
 
         this.physics.add.collider(diamond2, platforms);
         this.physics.add.overlap(player1, diamond2, this.collectDiamond);
+
+        //dark diamond
+        dark_diamond1 = this.physics.add.group();
+        this.physics.add.collider(dark_diamond1, platforms);
+        this.physics.add.collider(player1, dark_diamond1);
+
+        //dark diamond1
+        dark_diamond1 = this.physics.add.group({
+            key: 'dark_diamond1',
+            repeat: 1,
+            setXY: { x: 12, y: 100, stepX: 600, stepY: 100 }
+
+        });
+
+        dark_diamond1.children.iterate(function (child) {
+            child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.6));
+        });
+
+        this.physics.add.collider(dark_diamond1, platforms);
+        this.physics.add.overlap(player2, dark_diamond1, this.collectDiamond);
+        this.physics.add.overlap(player1, player2, this.nextLevel);
+
+        //dark diamond2
+        dark_diamond2 = this.physics.add.group();
+        this.physics.add.collider(dark_diamond2, platforms);
+        this.physics.add.collider(player2, dark_diamond1);
+
+        dark_diamond2 = this.physics.add.group({
+            key: 'dark_diamond2',
+            repeat: 1,
+            setXY: { x: 700, y: 500, stepX: 0 }
+
+        });
+
+        dark_diamond2.children.iterate(function (child) {
+            child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.6));
+            child.disableBody(true, true)
+        });
+
+        this.physics.add.collider(dark_diamond2, platforms);
+        this.physics.add.overlap(player2, dark_diamond2, this.collectDiamond);
+       // this.physics.add.overlap(player1, player2, this.nextLevel);
+
+         //เหยียบสวิตช์
+         this.physics.add.overlap(player1, switchbutton, this.upPlatform);
+         this.physics.add.overlap(player2, switchbutton, this.upPlatform);
 
 
         //door anime
@@ -233,6 +285,22 @@ class GameScene extends Phaser.Scene {
              repeat: -1
          });
 
+         console.log(obstacleplatform)
+
+         fire = this.physics.add.image(400, 400, 'fire');
+        this.physics.add.collider(fire, platforms);
+
+
+        this.physics.add.overlap(player1, fire, hitFire);
+        this.physics.add.overlap(player2, fire, hitFire);
+
+        let shadow32 = this.physics.add.image(600, y, 'shadow32');
+        this.physics.add.collider(shadow32, platforms);
+
+
+        this.physics.add.overlap(player1, shadow32, hitShadow);
+        //this.physics.add.overlap(player2, shadow32, hitShadow);
+
     }
 
     update() {
@@ -276,17 +344,19 @@ class GameScene extends Phaser.Scene {
         }
 
         //100, 400
-        if(platformisup == true){
-            if(obstacleplatform.y <= 200){
-                obstaclelatform.y = 200;
-            } else {
-                obstacleplatform.y--;
+        if (platformisup == true) {
+            if (obstacleplatform.y <= 200) {
+                obstacleplatform.setVelocityY(100)
+            }
+            else if (obstacleplatform.y > 400) {
+                obstacleplatform.setVelocityY(100)
             }
         } else {
-            if(obstacleplatform.y >= 400){
-                obstacleplatform.y = 400;
+            if (obstacleplatform.y <= 200) {
+                obstacleplatform.setVelocityY(0)
             } else {
-                obstacleplatform.y++;
+                obstacleplatform.setVelocityY(100)
+
             }
         }
         
@@ -299,10 +369,11 @@ class GameScene extends Phaser.Scene {
         diamondtmep.disableBody(true, true);
         //diamond2.disableBody(true, true);
 
-        if (diamond1.countActive(true) === 0) {
+        if (dark_diamond1.countActive(true) === 0) {
             door.anims.play('doors', true);
             this.nextLevel;
         }
+
     }
     nextLevel(player1, player2, door) {
         if (diamond1.countActive(true) === 0) {
@@ -316,11 +387,19 @@ class GameScene extends Phaser.Scene {
     }
     upPlatform(player, switchbutton){
         //เช็กได้ละว่าปุ่มถูกเหยียบ
-        console.log("platformisup = " + platformisup);
+        //console.log("platformisup = " + platformisup);
         platformisup = true;
-        console.log("platformisup = " + platformisup);
+        //console.log("platformisup = " + platformisup);
     }
 }
+function hitFire(player1, fire) {
+    console.log("hit")
+    gameover = true;
+}
 
+function hitShadow(player1, fire) {
+    console.log("hit")
+    gameover = true;
+}
 
 export default GameScene;

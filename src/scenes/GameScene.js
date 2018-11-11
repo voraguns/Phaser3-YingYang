@@ -106,16 +106,16 @@ class GameScene extends Phaser.Scene {
         this.physics.add.collider(player1, diamond1);
 
         //diamond1
-        diamond1 = this.physics.add.group({
+        diamond1 = this.physics.add.staticGroup({
             key: 'diamond1',
             repeat: 1,
-            setXY: { x: 12, y: 250, stepX: 500, stepY: 250 }
+            setXY: { x: 12, y: 270, stepX: 500, stepY: 250 }
 
         });
 
-        diamond1.children.iterate(function (child) {
+        /*diamond1.children.iterate(function (child) {
             child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.6));
-        });
+        });*/
 
         this.physics.add.collider(diamond1, platforms);
         this.physics.add.overlap(player1, diamond1, this.collectDiamond);
@@ -124,9 +124,9 @@ class GameScene extends Phaser.Scene {
         //diamond2
         diamond2 = this.physics.add.group();
         this.physics.add.collider(diamond2, platforms);
-        this.physics.add.collider(player2, diamond1);
+        //this.physics.add.collider(player2, diamond1);
 
-        diamond2 = this.physics.add.group({
+        /*diamond2 = this.physics.add.group({
             key: 'diamond2',
             repeat: 1,
             setXY: { x: 700, y: 500, stepX: 0 }
@@ -140,7 +140,7 @@ class GameScene extends Phaser.Scene {
 
 
         this.physics.add.collider(diamond2, platforms);
-        this.physics.add.overlap(player1, diamond2, this.collectDiamond);
+        this.physics.add.overlap(player1, diamond2, this.collectDiamond);*/
 
         //door anime
         this.anims.create({
