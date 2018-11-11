@@ -84,7 +84,7 @@ class GameScene extends Phaser.Scene {
         this.load.image('resume', '../../images/button/resume.png');
         this.load.image('sound_on', '../../images/button/sound_on.png');
         this.load.image('sound_off', '../../images/button/sound_off.png');
-
+        
         this.load.audio('bgaudio','../../sound/bg_music.mp3');
         this.load.audio('jump','../../sound/jump.mp3');
         this.load.audio('collect','../../sound/collect.mp3');
@@ -97,7 +97,6 @@ class GameScene extends Phaser.Scene {
         bgaudio = this.sound.add( 'bgaudio',  true);
         bgaudio.play({ loop: true });
         bgaudio.volume = -0.5;
-
 
         width = this.scene.scene.physics.world.bounds.width;
         height = this.scene.scene.physics.world.bounds.height;
@@ -119,30 +118,26 @@ class GameScene extends Phaser.Scene {
         platforms.create(10, 570, 'ground');
         platforms.create(400, 570, 'ground');
 
-        platforms.create(200, 300, 'short_path');
-        platforms.create(300, 300, 'short_path');
-        platforms.create(250, 360, 'sao');
-        platforms.create(30, 390, 'short_path');
-        platforms.create(30, 170, 'short_path');      
-        
-        //platforms.create(250, 20, 'obstacle');
-        platforms.create(250, 10, 'top');  
-        
-        platforms.create(500, 400, 'long_path');
-        platforms.create(590, 400, 'long_path');
-        platforms.create(700, 400, 'long_path');
+        door = this.add.sprite(x, 340, 'door');
+        platforms.create(x, 400, 'long_path');
+        platforms.create(300, 310, 'short_obstacle'); 
+        platforms.create(500, 310, 'short_obstacle');
+        platforms.create(300, 200, 'short_obstacle');
+        platforms.create(500, 200, 'short_obstacle');
+        platforms.create(x, 50, 'short_path');
+1
+        platforms.create(300, 280, 'short_path');
+        platforms.create(500, 280, 'short_path');
 
-        platforms.create(600, 320, 'long_path');
-        platforms.create(580, 270, 'short_obstacle2');
-        platforms.create(500, 120, 'long_path');
-        platforms.create(700, 220, 'long_path');
+        platforms.create(50, 400, 'short_path');
+        platforms.create(50, 300, 'short_path');
+        platforms.create(50, 200, 'short_path');
 
-        //platforms.create(580, 270, 'short_obstacle2');
+        platforms.create(750, 400, 'short_path');
+        platforms.create(750, 300, 'short_path');
+        platforms.create(750, 200, 'short_path');
 
-        //platforms.create(700, 250, 'long_path');
-
-        door = this.add.sprite(750, 150, 'door');
-
+        //ตำแหน่งตัวละคร
         player1 = this.physics.add.image(50, 500, 'yang').setScale(0.5); //white
         player2 = this.physics.add.image(750, 400, 'ying').setScale(0.5); //black
 
@@ -162,29 +157,15 @@ class GameScene extends Phaser.Scene {
         this.physics.add.collider(player1, platforms);
         this.physics.add.collider(player2, platforms);
 
-        //สวิตช์กับแพลตฟอร์ม
-        switchbutton = this.physics.add.staticImage(600, 540, 'switch');
-        obstacleplatform = this.physics.add.sprite(250, 90, 'short_obstacle')
-        console.log(obstacleplatform.body.allowGravity = false)
-
-        this.physics.add.collider(player1, obstacleplatform);
-        this.physics.add.collider(player2, obstacleplatform);
-
-        cursors = this.input.keyboard.createCursorKeys();
-
-        this.keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
-        this.keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
-        this.keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
-
+        //diamond1
         diamond1 = this.physics.add.group();
         this.physics.add.collider(diamond1, platforms);
         this.physics.add.collider(player1, diamond1);
 
-        //diamond1
         diamond1 = this.physics.add.group({
             key: 'diamond1',
             repeat: 1,
-            setXY: { x: 12, y: 250, stepX: 500, stepY: 250 }
+            setXY: { x: 780, y: 100, stepX: -620, stepY: 400 }
 
         });
 
@@ -193,8 +174,7 @@ class GameScene extends Phaser.Scene {
         });
 
         this.physics.add.collider(diamond1, platforms);
-        this.physics.add.overlap(player1, diamond1, this.collectDiamond);
-        //this.physics.add.overlap(player1, player2, this.nextLevel);
+        this.physics.add.overlap(player1, diamond1, this.collectDiamond1);
 
         //diamond2
         diamond2 = this.physics.add.group();
@@ -204,7 +184,7 @@ class GameScene extends Phaser.Scene {
         diamond2 = this.physics.add.group({
             key: 'diamond2',
             repeat: 1,
-            setXY: { x: 700, y: 500, stepX: 0 }
+            setXY: { x: 100, y: 500, stepX: 100 }
 
         });
 
@@ -214,7 +194,7 @@ class GameScene extends Phaser.Scene {
         });
 
         this.physics.add.collider(diamond2, platforms);
-        this.physics.add.overlap(player1, diamond2, this.collectDiamond);
+        this.physics.add.overlap(player1, diamond2, this.collectDiamond1);
 
         //dark diamond
         dark_diamond1 = this.physics.add.group();
@@ -225,7 +205,7 @@ class GameScene extends Phaser.Scene {
         dark_diamond1 = this.physics.add.group({
             key: 'dark_diamond1',
             repeat: 1,
-            setXY: { x: 12, y: 100, stepX: 600, stepY: 100 }
+            setXY: { x: 12, y: 100, stepX: 600, stepY: 400 }
 
         });
 
@@ -234,8 +214,8 @@ class GameScene extends Phaser.Scene {
         });
 
         this.physics.add.collider(dark_diamond1, platforms);
-        this.physics.add.overlap(player2, dark_diamond1, this.collectDiamond);
-        this.physics.add.overlap(player1, player2, this.nextLevel);
+        this.physics.add.overlap(player2, dark_diamond1, this.collectDiamond2);
+        this.physics.add.overlap(player1, player2, this.winner);
 
         //dark diamond2
         dark_diamond2 = this.physics.add.group();
@@ -255,80 +235,16 @@ class GameScene extends Phaser.Scene {
         });
 
         this.physics.add.collider(dark_diamond2, platforms);
-        this.physics.add.overlap(player2, dark_diamond2, this.collectDiamond);
-       // this.physics.add.overlap(player1, player2, this.nextLevel);
+        this.physics.add.overlap(player2, dark_diamond2, this.collectDiamond2);
+        //this.physics.add.overlap(player1, player2, this.winner);
 
-         //เหยียบสวิตช์
-         this.physics.add.overlap(player1, switchbutton, this.upPlatform);
-         this.physics.add.overlap(player2, switchbutton, this.upPlatform);
+        //ปุ่มควบคุมตัวละคร
+        cursors = this.input.keyboard.createCursorKeys();
+        this.keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
+        this.keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
+        this.keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
 
-
-        //door anime
-        this.anims.create({
-            key: 'doors',
-            frames: this.anims.generateFrameNumbers('door', { start: 0, end: 4 }),
-            frameRate: 10
-        });
-
-        //anime yang
-        this.anims.create({
-            key: 'left',
-            frames: this.anims.generateFrameNumbers('yang', { start: 3, end: 5 }),
-            frameRate: 10,
-            repeat: -1
-        });
-
-        /* this.anims.create({
-            key: 'turn',
-            frames: [{ key: 'beaver', frame: 4 }],
-            frameRate: 20
-        }); */ 
-
-        this.anims.create({
-            key: 'right',
-            frames: this.anims.generateFrameNumbers('yang', { start: 0, end: 2 }),
-            frameRate: 10,
-            repeat: -1
-        });
-
-        //anime ying
-        this.anims.create({
-            key: 'keyA',
-            frames: this.anims.generateFrameNumbers('ying', { start: 3, end: 5 }),
-            frameRate: 10,
-            repeat: -1
-        });
-
-        /* this.anims.create({
-            key: 'turn',
-            frames: [{ key: 'beaver', frame: 4 }],
-            frameRate: 20
-        }); */
-
-        this.anims.create({
-             key: 'keyD',
-             frames: this.anims.generateFrameNumbers('ying', { start: 0, end: 2 }),
-             frameRate: 10,
-             repeat: -1
-         });
-
-         console.log(obstacleplatform)
-
-         fire = this.physics.add.image(400, 400, 'fire');
-        this.physics.add.collider(fire, platforms);
-
-
-        this.physics.add.overlap(player1, fire, hitFire);
-        this.physics.add.overlap(player2, fire, hitFire);
-
-        let shadow32 = this.physics.add.image(600, y, 'shadow32');
-        this.physics.add.collider(shadow32, platforms);
-        this.physics.add.overlap(player1, shadow32, hitShadow32);
-        
-        let shadow31 = this.physics.add.image(550, 200, 'shadow31');
-        this.physics.add.collider(shadow31, platforms);
-        this.physics.add.overlap(player1, shadow31, hitShadow31);
-
+        //ปุ่ม option ในด่าน
         playimage1 = this.add.image(770, 30, 'setting');
         playimage1.setInteractive();
         playimage1.input.useHandCursor = true;
@@ -350,7 +266,7 @@ class GameScene extends Phaser.Scene {
 
             playimage6 = this.add.image(380,410, 'menu');
         });
-
+        
     }
 
     update() {
@@ -390,73 +306,11 @@ class GameScene extends Phaser.Scene {
         }
 
         if (gameover == true) {
-            this.add.image(400, 300, 'game_over');
             this.physics.pause();
         }
 
-        //100, 400
-        if (platformisup == true) {
-            if (obstacleplatform.y <= 200) {
-                obstacleplatform.setVelocityY(100)
-            }
-            else if (obstacleplatform.y > 400) {
-                obstacleplatform.setVelocityY(100)
-            }
-        } else {
-            if (obstacleplatform.y <= 200) {
-                obstacleplatform.setVelocityY(0)
-            } else {
-                obstacleplatform.setVelocityY(100)
-
-            }
-        }
-        
-
-        //ยังหาค่า y ของ updownplatform ไม่เจอ น่าจะต้องแก้ตัว updownplatform เป็น Object ชนิดอื่น
-        //เอาคอมเม้นต์ออกจะเห็นว่าเป็น NaN คือไม่มีค่านั่นแหละ
-        //console.log("updownplatform.y = " + updownplatform.y);
-    }
-    collectDiamond(player1, diamondtmep) {
-        diamondtmep.disableBody(true, true);
-        //diamond2.disableBody(true, true);
-
-        if (dark_diamond1.countActive(true) === 0) {
-            door.anims.play('doors', true);
-            this.nextLevel;
-        }
-
-    }
-    nextLevel(player1, player2, door) {
-        if (diamond1.countActive(true) === 0) {
-            doorCheck = true;
-        }
-    }
-    hitFire(player, fire) {
-        //เช็กกะดาวโย่ว
-        console.log("Oh yeahhhhhh");
-        gameover = true;
-    }
-    upPlatform(player, switchbutton){
-        //เช็กได้ละว่าปุ่มถูกเหยียบ
-        //console.log("platformisup = " + platformisup);
-        platformisup = true;
-        //console.log("platformisup = " + platformisup);
     }
 }
-function hitFire(player1, fire) {
-    console.log("hit")
-    gameover = true;
-}
-
-function hitShadow31(player1, shadow31) {
-    console.log("hit")
-    gameover = true;
-}
-function hitShadow32(player1, shadow32) {
-    console.log("hit")
-    gameover = true;
-}
-
 function clickHandler () {
     playimage2.setVisible(false);
     playimage3.setVisible(false);
@@ -464,4 +318,29 @@ function clickHandler () {
     playimage5.setVisible(false);
     playimage6.setVisible(false);
 }
+function collectDiamond(player1, diamondtmep) {
+    diamondtmep.disableBody(true, true);
+    //diamond2.disableBody(true, true);
+
+    if (diamond1.countActive(true) === 0) {
+        door.anims.play('doors', true);
+    }
+}
+function collectDiamond2(player2, diamondtmep) {
+    diamondtmep.disableBody(true, true);
+    //diamond2.disableBody(true, true);
+
+    if (dark_diamond1.countActive(true) === 0) {
+        door.anims.play('doors', true);
+    }
+}
+function winner(player1, player2, door) {
+    if (diamond1.countActive(true) === 0) {
+        doorCheck = true;
+    }
+    if (dark_diamond1.countActive(true) === 0) {
+        doorCheck = true;
+    }
+}
+
 export default GameScene;

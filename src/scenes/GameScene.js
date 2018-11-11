@@ -17,6 +17,13 @@ let diamond1;
 let diamond2;
 let doorCheck = false;
 
+let bgaudio;
+let jump;
+let collect;
+let die;
+let open;
+
+
 //import pic from '../../images/map';
 class GameScene extends Phaser.Scene {
     constructor(test) {
@@ -43,13 +50,33 @@ class GameScene extends Phaser.Scene {
 
         this.load.image('fire', '../../images/map/fire.png');
 
-        this.load.spritesheet('yang', '../../images/yang/walk1.png', { frameWidth: 80, frameHeight:107 });
-        this.load.spritesheet('ying', '../../images/ying/walk.png', { frameWidth: 80, frameHeight: 107 });
+        this.load.spritesheet('yang', '../../images/yang/walk1.png', { frameWidth: 80, frameHeight: 84 });
+        this.load.spritesheet('ying', '../../images/ying/walk.png', { frameWidth: 80, frameHeight: 84 });
 
-
+        
+        this.load.image('setting', '../../images/button/setting.png');
+        this.load.image('setting_point', '../../images/button/setting_point.png');
+        this.load.image('setting_page', '../../images/button/setting_page.png');
+        this.load.image('menu', '../../images/button/menu.png');
+        this.load.image('resume', '../../images/button/resume.png');
+        this.load.image('sound_on', '../../images/button/sound_on.png');
+        this.load.image('sound_off', '../../images/button/sound_off.png');
+     
+        this.load.audio('bgaudio','../../sound/bg_music.mp3');
+        this.load.audio('jump','../../sound/jump.mp3');
+        this.load.audio('collect','../../sound/collect.mp3');
+        this.load.audio('die','../../sound/die.mp3');
+        this.load.audio('open','../../sound/open.mp3');
     }
 
     create() {
+        //ใส่เสียง
+        bgaudio = this.sound.add( 'bgaudio',  true);
+        bgaudio.play({ loop: true });
+        bgaudio.volume = -0.5;
+
+       // jump = this.sound.add( 'jump');
+
         width = this.scene.scene.physics.world.bounds.width;
         height = this.scene.scene.physics.world.bounds.height;
         x = width * 0.5;
@@ -191,6 +218,27 @@ class GameScene extends Phaser.Scene {
              repeat: -1
          });
 
+         playimage1 = this.add.image(770, 30, 'setting');
+        playimage1.setInteractive();
+        playimage1.input.useHandCursor = true;
+        playimage1.on ('pointerup', () => { 
+            playimage2 = this.add.image(x, y, 'setting_page');
+            playimage2.setInteractive();
+
+            playimage3 = this.add.image(380,210, 'sound_on');
+            playimage3.setInteractive();
+
+            playimage4 = this.add.image(380,270, 'sound_off');
+            playimage4.setInteractive();
+
+            playimage5 = this.add.image(380,350, 'resume');
+            playimage5.setInteractive();
+            playimage5.on ('pointerup', () => {
+                this.input.on('gameobjectup',clickHandler, this);
+            });
+
+            playimage6 = this.add.image(380,410, 'menu');
+        });
     }
 
     update() {
@@ -203,6 +251,7 @@ class GameScene extends Phaser.Scene {
 
         } else {
             player1.setVelocityX(0);
+            //jump.play();
 
         }
         if (cursors.up.isDown && player1.body.onFloor()) {
@@ -221,6 +270,7 @@ class GameScene extends Phaser.Scene {
 
         } else {
             player2.setVelocityX(0);
+            //jump.play();
         }
         if (this.keyW.isDown && player2.body.onFloor()) {
             player2.setVelocityY(-330);
