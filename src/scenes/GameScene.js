@@ -7,6 +7,7 @@ let platforms;
 let player;
 let gameover = false;
 let cursors;
+let playimage1, playimage2, playimage3, playimage4, playimage5, playimage6;
 
 let player1;
 let player2;
@@ -244,6 +245,21 @@ class GameScene extends Phaser.Scene {
         }
 
     }
+}
+
+function hitFire(player, fire) {
+    player.setTint(0xff0000);
+    player.anims.play('turn');
+
+    gameover = true;
+}
+
+function clickHandler () {
+    playimage2.setVisible(false);
+    playimage3.setVisible(false);
+    playimage4.setVisible(false);
+    playimage5.setVisible(false);
+    playimage6.setVisible(false);
 }
 
 export default GameScene;
