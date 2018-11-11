@@ -120,8 +120,8 @@ class GameScene extends Phaser.Scene {
         this.physics.add.collider(player1, platforms);
         this.physics.add.collider(player2, platforms);
 
-        this.physics.add.collider(player1, updownplatform,null);
-        this.physics.add.collider(player2, updownplatform,null);
+        this.physics.add.collider(player1, updownplatform,this.hitUpdown);
+        this.physics.add.collider(player2, updownplatform,this.hitUpdown);
 
         cursors = this.input.keyboard.createCursorKeys();
 
@@ -148,6 +148,9 @@ class GameScene extends Phaser.Scene {
         //this.physics.add.collider(diamond1, platforms);
         this.physics.add.overlap(player1, diamond1, this.collectDiamond);
         this.physics.add.overlap(player1, player2, this.nextLevel);
+
+        /*this.physics.add.overlap(player1,updownplatform,this.hitUpdown)
+        this.physics.add.overlap(player2,updownplatform,this.hitUpdown)*/
 
         //diamond2
         /*diamond2 = this.physics.add.group();
@@ -198,12 +201,16 @@ class GameScene extends Phaser.Scene {
         this.physics.add.overlap(player2, switchbutton, this.upPlatform);
         //console.log(switchbutton.onOverlap)
 
+        /*this.physics.add.overlap(player1, updownplatform, this.upPlatform);
+        this.physics.add.overlap(player2, updownplatform, this.upPlatform);*/
+
         shadow = this.physics.add.staticImage(x,y,'shadow');
         this.physics.add.collider(player1,shadow,hitShadow);
+        this.physics.add.overlap(player1,platforms,hitUpdown);
 
         fire = this.physics.add.image(400, 400, 'fire');
         this.physics.add.collider(fire, platforms);
-
+        // this.physics.add.collider(player1, updownplatform, touchit)
 
         this.physics.add.overlap(player1, fire, hitFire);
         this.physics.add.overlap(player2, fire, hitFire);
@@ -275,9 +282,21 @@ class GameScene extends Phaser.Scene {
             player1.setVelocityX(0);
 
         }
-        if (cursors.up.isDown && player1.body.onFloor()) {
+        // if ((cursors.up.isDown && player1.body.onFloor())|| player1.hitUpdown) {
+        //     player1.setVelocityY(-330);
+        // }
+        // if ((cursors.up.isDown && player1.body.onFloor())) {
+        //     player1.setVelocityY(-330);
+        // }
+        
+        if((cursors.up.isDown && player1.body.onFloor())){
             player1.setVelocityY(-330);
         }
+
+        // if (cursors.up.isDown && touch === false) {
+        //     console.log('sa')
+        //     player1.setVelocityY(-330);
+        // }
 
 
         //control ying
@@ -292,7 +311,7 @@ class GameScene extends Phaser.Scene {
         } else {
             player2.setVelocityX(0);
         }
-        if (this.keyW.isDown && player2.body.onFloor()) {
+        if ((this.keyW.isDown)&&player2.body.onFloor()) {
             player2.setVelocityY(-330);
         }
         if (doorCheck === true) {
@@ -309,16 +328,9 @@ class GameScene extends Phaser.Scene {
                 updownplatform.setVelocityY(100)
             }
             else if (updownplatform.y > 400) {
-                updownplatform.setVelocityY(-100)
+                updownplatform.setVelocityY(-300)
             }
-        } else {
-            if (updownplatform.y <= 200) {
-                updownplatform.setVelocityY(0)
-            } else {
-                updownplatform.setVelocityY(-100)
-
-            }
-        }
+        } 
 
 
         //ยังหาค่า y ของ updownplatform ไม่เจอ น่าจะต้องแก้ตัว updownplatform เป็น Object ชนิดอื่น
@@ -351,14 +363,26 @@ class GameScene extends Phaser.Scene {
 
 }
 
+let up=false;
+function hitUpdown(player1,platform){
+    console.log("hits")
+    up = true;
+}
+
 function hitShadow(player1,shadow){
     console.log("hits")
     gameover = true;
 }
 
-function hitFire(player1, fire) {
+function hitFire(player, fire) {
     console.log("hit")
     gameover = true;
+}
+
+let touch = false;
+function touchit(player1, updownplatform){
+    this.physics.collider(player1,platforms);
+    up = true;
 }
 
 
