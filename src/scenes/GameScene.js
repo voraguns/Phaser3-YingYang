@@ -29,6 +29,27 @@ class GameScene extends Phaser.Scene {
         this.load.image('bg', '../../images/map/bg.jpg');
         this.load.image('ground', '../../images/map/ground.png');
         this.load.image('sao', '../../images/map/sao.png');
+        this.load.image('shot path', '../../images/map/short_path.png');
+        this.load.image('fire', '../../images/map/fire.png');
+        this.load.image('long_path', '../../images/map/long_path.png');
+        this.load.image('lamp_on', '../../images/map/lamp_on.png');
+        this.load.image('lamp_off', '../../images/map/lamp_off.png');
+
+        this.load.spritesheet('yang', '../../images/yang/ya1.png', { frameWidth: 800, frameHeight: 600 });
+
+        this.load.image('setting', '../../images/button/setting.png');
+        this.load.image('setting_point', '../../images/button/setting_point.png');
+        this.load.image('setting_page', '../../images/button/setting_page.png');
+        this.load.image('menu', '../../images/button/menu.png');
+        this.load.image('resume', '../../images/button/resume.png');
+        this.load.image('sound_on', '../../images/button/sound_on.png');
+        this.load.image('sound_off', '../../images/button/sound_off.png');
+
+
+
+        this.load.image('bg', '../../images/map/bg.jpg');
+        this.load.image('ground', '../../images/map/ground.png');
+        this.load.image('sao', '../../images/map/sao.png');
         this.load.image('short_path', '../../images/map/short_path.png');
         this.load.image('fire', '../../images/map/fire.png');
         this.load.image('long_path', '../../images/map/long_path.png');
@@ -43,7 +64,7 @@ class GameScene extends Phaser.Scene {
 
         this.load.image('fire', '../../images/map/fire.png');
 
-        this.load.spritesheet('yang', '../../images/yang/walk1.png', { frameWidth: 80, frameHeight:107 });
+        this.load.spritesheet('yang', '../../images/yang/walk1.png', { frameWidth: 80, frameHeight: 107 });
         this.load.spritesheet('ying', '../../images/ying/walk.png', { frameWidth: 80, frameHeight: 107 });
 
 
@@ -96,6 +117,31 @@ class GameScene extends Phaser.Scene {
         this.physics.add.collider(player2, platforms);
 
         cursors = this.input.keyboard.createCursorKeys();
+
+        playimage1 = this.add.image(770, 30, 'setting');
+        playimage1.setInteractive();
+        playimage1.input.useHandCursor = true;
+        playimage1.on('pointerup', () => {
+            playimage2 = this.add.image(x, y, 'setting_page');
+            playimage2.setInteractive();
+
+            playimage3 = this.add.image(380, 210, 'sound_on');
+            playimage3.setInteractive();
+
+            playimage4 = this.add.image(380, 270, 'sound_off');
+            playimage4.setInteractive();
+
+            playimage5 = this.add.image(380, 350, 'resume');
+            playimage5.setInteractive();
+            playimage5.on('pointerup', () => {
+                this.input.on('gameobjectup', clickHandler, this);
+            });
+
+            playimage6 = this.add.image(380, 410, 'menu');
+        });
+
+
+
 
         this.keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
         this.keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
@@ -161,7 +207,7 @@ class GameScene extends Phaser.Scene {
             key: 'turn',
             frames: [{ key: 'beaver', frame: 4 }],
             frameRate: 20
-        }); */ 
+        }); */
 
         this.anims.create({
             key: 'right',
@@ -185,11 +231,11 @@ class GameScene extends Phaser.Scene {
         }); */
 
         this.anims.create({
-             key: 'keyD',
-             frames: this.anims.generateFrameNumbers('ying', { start: 0, end: 2 }),
-             frameRate: 10,
-             repeat: -1
-         });
+            key: 'keyD',
+            frames: this.anims.generateFrameNumbers('ying', { start: 0, end: 2 }),
+            frameRate: 10,
+            repeat: -1
+        });
 
     }
 
@@ -245,6 +291,8 @@ class GameScene extends Phaser.Scene {
         }
 
     }
+
+
 }
 
 function hitFire(player, fire) {
@@ -254,7 +302,7 @@ function hitFire(player, fire) {
     gameover = true;
 }
 
-function clickHandler () {
+function clickHandler() {
     playimage2.setVisible(false);
     playimage3.setVisible(false);
     playimage4.setVisible(false);

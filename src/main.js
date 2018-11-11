@@ -20,9 +20,9 @@ const config = {
         }
     },
     scene: [
-       // MainMenu,
-       //GameScene
-       Game_lv2
+       MainMenu,
+       GameScene
+       //Game_lv2
        //Game_lv3
     ]
 };
