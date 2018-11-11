@@ -157,6 +157,35 @@ class GameScene extends Phaser.Scene {
         this.physics.add.collider(player1, platforms);
         this.physics.add.collider(player2, platforms);
 
+        //ปุ่มควบคุมตัวละคร
+        cursors = this.input.keyboard.createCursorKeys();
+        this.keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
+        this.keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
+        this.keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
+
+        //ปุ่ม option ในด่าน
+        playimage1 = this.add.image(770, 30, 'setting');
+        playimage1.setInteractive();
+        playimage1.input.useHandCursor = true;
+        playimage1.on ('pointerup', () => { 
+            playimage2 = this.add.image(x, y, 'setting_page');
+            playimage2.setInteractive();
+
+            playimage3 = this.add.image(380,210, 'sound_on');
+            playimage3.setInteractive();
+
+            playimage4 = this.add.image(380,270, 'sound_off');
+            playimage4.setInteractive();
+
+            playimage5 = this.add.image(380,350, 'resume');
+            playimage5.setInteractive();
+            playimage5.on ('pointerup', () => {
+                this.input.on('gameobjectup',clickHandler, this);
+            });
+
+            playimage6 = this.add.image(380,410, 'menu');
+        });
+        
         //diamond1
         diamond1 = this.physics.add.group();
         this.physics.add.collider(diamond1, platforms);
@@ -235,38 +264,8 @@ class GameScene extends Phaser.Scene {
         });
 
         this.physics.add.collider(dark_diamond2, platforms);
-        this.physics.add.overlap(player2, dark_diamond2, this.collectDiamond2);
+        this.physics.add.overlap(player2, dark_diamond1, this.collectDiamond2);
         //this.physics.add.overlap(player1, player2, this.winner);
-
-        //ปุ่มควบคุมตัวละคร
-        cursors = this.input.keyboard.createCursorKeys();
-        this.keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
-        this.keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
-        this.keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
-
-        //ปุ่ม option ในด่าน
-        playimage1 = this.add.image(770, 30, 'setting');
-        playimage1.setInteractive();
-        playimage1.input.useHandCursor = true;
-        playimage1.on ('pointerup', () => { 
-            playimage2 = this.add.image(x, y, 'setting_page');
-            playimage2.setInteractive();
-
-            playimage3 = this.add.image(380,210, 'sound_on');
-            playimage3.setInteractive();
-
-            playimage4 = this.add.image(380,270, 'sound_off');
-            playimage4.setInteractive();
-
-            playimage5 = this.add.image(380,350, 'resume');
-            playimage5.setInteractive();
-            playimage5.on ('pointerup', () => {
-                this.input.on('gameobjectup',clickHandler, this);
-            });
-
-            playimage6 = this.add.image(380,410, 'menu');
-        });
-        
     }
 
     update() {
@@ -284,7 +283,6 @@ class GameScene extends Phaser.Scene {
         if (cursors.up.isDown && player1.body.onFloor()) {
             player1.setVelocityY(-330);
         }
-
 
         //control ying
         if (this.keyA.isDown) {
@@ -320,15 +318,13 @@ function clickHandler () {
 }
 function collectDiamond(player1, diamondtmep) {
     diamondtmep.disableBody(true, true);
-    //diamond2.disableBody(true, true);
 
     if (diamond1.countActive(true) === 0) {
         door.anims.play('doors', true);
     }
 }
-function collectDiamond2(player2, diamondtmep) {
-    diamondtmep.disableBody(true, true);
-    //diamond2.disableBody(true, true);
+function collectDiamond2(player2, diamondtmep2) {
+    diamondtmep2.disableBody(true, true);
 
     if (dark_diamond1.countActive(true) === 0) {
         door.anims.play('doors', true);
