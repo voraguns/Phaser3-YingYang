@@ -85,28 +85,23 @@ class GameScene extends Phaser.Scene {
         // this.add.image(x, y, 'fog');
         this.add.image(x, y, 'shadow');
 
-        platforms.create(100, 100, 'long_path');        
+        platforms.create(100, 100, 'long_path');
         platforms.create(750, 350, 'short_path');
         //platforms.create(750, 335, 'switch');
 
-        platforms.create(x, 500, 'fire');
 
         //platforms.create(100, 400, 'updown');
 
         //สวิตช์กับแพลตฟอร์ม
         switchbutton = this.physics.add.staticImage(750, 333, 'switch');
-        updownplatform = this.physics.add.staticGroup({
-            key: 'updown',
-            repeat: 0,
-            setXY: { x: 100, y: 400 }
-
-        });
+        updownplatform = this.physics.add.sprite(100, 200, 'updown')
+        console.log(updownplatform.body.allowGravity = false)
         //updownplatform.create(100, 400, 'updown');
 
         door = this.add.sprite(750, 485, 'door');
 
-        player1 = this.physics.add.image(50, 500, 'yang').setScale(0.5); //white
-        player2 = this.physics.add.image(100, 500, 'ying').setScale(0.5); //black
+        player1 = this.physics.add.image(100, 500, 'yang').setScale(0.5); //white
+        player2 = this.physics.add.image(50, 500, 'ying').setScale(0.5); //black
 
         player1.setBounce(0.2);
         player1.setCollideWorldBounds(true);
@@ -117,8 +112,8 @@ class GameScene extends Phaser.Scene {
         this.physics.add.collider(player1, platforms);
         this.physics.add.collider(player2, platforms);
 
-        this.physics.add.collider(player1, updownplatform);
-        this.physics.add.collider(player2, updownplatform);
+        this.physics.add.collider(player1, updownplatform,null);
+        this.physics.add.collider(player2, updownplatform,null);
 
         cursors = this.input.keyboard.createCursorKeys();
 
@@ -139,7 +134,7 @@ class GameScene extends Phaser.Scene {
         });
 
         //diamond1.children.iterate(function (child) {
-           // child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.6));
+        // child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.6));
         //});
 
         //this.physics.add.collider(diamond1, platforms);
@@ -193,18 +188,22 @@ class GameScene extends Phaser.Scene {
         //เหยียบสวิตช์
         this.physics.add.overlap(player1, switchbutton, this.upPlatform);
         this.physics.add.overlap(player2, switchbutton, this.upPlatform);
-
-        fire = this.physics.add.group();
+        //console.log(switchbutton.onOverlap)
+        fire = this.physics.add.image(400, 400, 'fire');
         this.physics.add.collider(fire, platforms);
-        this.physics.add.collider(player1, player2, fire);
+
+
+        this.physics.add.overlap(player1, fire, hitFire);
+        this.physics.add.overlap(player2, fire, hitFire);
+
 
         //this.physics.add.collider(diamond1, platforms);
-        this.physics.add.overlap(player1, fire, this.hitFire);
-        this.physics.add.overlap(player2, fire, this.hitFire);
+        /*this.physics.add.overlap(player1, fire, this.hitFire);
+        this.physics.add.overlap(player2, fire, this.hitFire);*/
         //this.physics.add.overlap(player1, player2, this.nextLevel);
 
 
-        
+
 
         /*this.anims.create({
             key: 'left',
@@ -247,6 +246,7 @@ class GameScene extends Phaser.Scene {
              repeat: -1
          });*/
 
+         console.log(updownplatform)
 
     }
 
@@ -291,19 +291,22 @@ class GameScene extends Phaser.Scene {
         }
 
         //100, 400
-        if(platformisup == true){
-            if(updownplatform.y <= 200){
-                updownplatform.y = 200;
-            } else {
-                updownplatform.y--;
+        if (platformisup == true) {
+            if (updownplatform.y <= 200) {
+                updownplatform.setVelocityY(100)
+            }
+            else if (updownplatform.y > 400) {
+                updownplatform.setVelocityY(-100)
             }
         } else {
-            if(updownplatform.y >= 400){
-                updownplatform.y = 400;
+            if (updownplatform.y <= 200) {
+                updownplatform.setVelocityY(0)
             } else {
-                updownplatform.y++;
+                updownplatform.setVelocityY(-100)
+
             }
         }
+
 
         //ยังหาค่า y ของ updownplatform ไม่เจอ น่าจะต้องแก้ตัว updownplatform เป็น Object ชนิดอื่น
         //เอาคอมเม้นต์ออกจะเห็นว่าเป็น NaN คือไม่มีค่านั่นแหละ
@@ -323,17 +326,22 @@ class GameScene extends Phaser.Scene {
             doorCheck = true;
         }
     }
-    hitFire(player1, player2, fire) {
-        gameover = true;
-    }
-    upPlatform(player, switchbutton){
+
+    upPlatform(player, switchbutton) {
         //เช็กได้ละว่าปุ่มถูกเหยียบ
-        console.log("platformisup = " + platformisup);
+        /*console.log(updownplatform.y)
+        console.log("platformisup = " + platformisup);*/
         platformisup = true;
-        console.log("platformisup = " + platformisup);
+        //console.log("platformisup = " + platformisup);
     }
-   
+
 
 }
+
+function hitFire(player1, fire) {
+    console.log("hit")
+    gameover = true;
+}
+
 
 export default GameScene;
