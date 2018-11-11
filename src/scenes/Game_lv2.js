@@ -194,13 +194,18 @@ class GameScene extends Phaser.Scene {
         this.physics.add.overlap(player1, switchbutton, this.upPlatform);
         this.physics.add.overlap(player2, switchbutton, this.upPlatform);
 
-        fire = this.physics.add.group();
+        //โดนไฟแล้วตายห่า
+        
+        this.physics.add.overlap(player1, fire, this.hitFire);
+        this.physics.add.overlap(player2, fire, this.hitFire);
+
+        /*fire = this.physics.add.group();
         this.physics.add.collider(fire, platforms);
         this.physics.add.collider(player1, player2, fire);
 
         //this.physics.add.collider(diamond1, platforms);
         this.physics.add.overlap(player1, fire, this.hitFire);
-        this.physics.add.overlap(player2, fire, this.hitFire);
+        this.physics.add.overlap(player2, fire, this.hitFire);*/
         //this.physics.add.overlap(player1, player2, this.nextLevel);
 
 
@@ -304,6 +309,7 @@ class GameScene extends Phaser.Scene {
                 updownplatform.y++;
             }
         }
+        
 
         //ยังหาค่า y ของ updownplatform ไม่เจอ น่าจะต้องแก้ตัว updownplatform เป็น Object ชนิดอื่น
         //เอาคอมเม้นต์ออกจะเห็นว่าเป็น NaN คือไม่มีค่านั่นแหละ
@@ -323,7 +329,9 @@ class GameScene extends Phaser.Scene {
             doorCheck = true;
         }
     }
-    hitFire(player1, player2, fire) {
+    hitFire(player, fire) {
+        //เช็กกะดาวโย่ว
+        console.log("Oh yeahhhhhh");
         gameover = true;
     }
     upPlatform(player, switchbutton){
@@ -332,8 +340,6 @@ class GameScene extends Phaser.Scene {
         platformisup = true;
         console.log("platformisup = " + platformisup);
     }
-   
-
 }
 
 export default GameScene;
