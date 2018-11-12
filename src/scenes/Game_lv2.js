@@ -25,8 +25,6 @@ let platformisup = false;
 let fire;
 let shadow;
 
-let overpic;
-
 class GameScene extends Phaser.Scene {
     constructor(test) {
         super({
@@ -56,7 +54,7 @@ class GameScene extends Phaser.Scene {
         this.load.image('fog', '../../images/map2_only/fog.png');
         this.load.image('switch', '../../images/map2_only/switch.png');
         this.load.image('updown', '../../images/map2_only/updown.png');
-        this.load.image('over','../../images/gameov/game over.png');
+        this.load.image('over','../../images/gameov/game over.png')
 
         this.load.spritesheet('yang', '../../images/yang/ya1.png', { frameWidth: 85, frameHeight: 113 }); //white
         this.load.spritesheet('ying', '../../images/ying/yi3.png', { frameWidth: 80, frameHeight: 90 }); //black
@@ -65,7 +63,6 @@ class GameScene extends Phaser.Scene {
     }
 
     create() {
-
         let width = this.scene.scene.physics.world.bounds.width;
         let height = this.scene.scene.physics.world.bounds.height;
         let x = width * 0.5;
@@ -112,7 +109,8 @@ class GameScene extends Phaser.Scene {
 
         //updownplatform.create(100, 400, 'updown');
         updownplatform.setCollideWorldBounds(true);
-        door = this.add.sprite(750, 485, 'door');
+        door = this.physics.add.sprite(750, 485, 'door');
+        door.body.allowGravity = false
 
         player1 = this.physics.add.image(100, 500, 'yang').setScale(0.5); //white
         player2 = this.physics.add.image(50, 500, 'ying').setScale(0.5); //black
@@ -128,6 +126,7 @@ class GameScene extends Phaser.Scene {
 
         this.physics.add.collider(player1, updownplatform,this.hitUpdown);
         this.physics.add.collider(player2, updownplatform,this.hitUpdown);
+        this.physics.add.collider(platforms, door)
 
         cursors = this.input.keyboard.createCursorKeys();
 
@@ -153,7 +152,7 @@ class GameScene extends Phaser.Scene {
 
         //this.physics.add.collider(diamond1, platforms);
         this.physics.add.overlap(player1, diamond1, this.collectDiamond);
-        this.physics.add.overlap(player1, player2, this.nextLevel);
+        //this.physics.add.overlap(player1, player2, this.nextLevel);
 
         /*this.physics.add.overlap(player1,updownplatform,this.hitUpdown)
         this.physics.add.overlap(player2,updownplatform,this.hitUpdown)*/
@@ -210,17 +209,23 @@ class GameScene extends Phaser.Scene {
         /*this.physics.add.overlap(player1, updownplatform, this.upPlatform);
         this.physics.add.overlap(player2, updownplatform, this.upPlatform);*/
 
-        shadow = this.physics.add.staticImage(x,y+25,'shadow').setScale(0.7,0.7);
+        shadow = this.physics.add.staticImage(x,y+25,'shadow').setScale(1,1);
         this.physics.add.collider(player1,shadow,hitShadow);
         this.physics.add.overlap(player1,platforms,hitUpdown);
 
-        fire = this.physics.add.image(400, 400, 'fire');
+        fire = this.physics.add.image(400, 400, 'fire').setScale(1.8,1.8);
         this.physics.add.collider(fire, platforms);
         // this.physics.add.collider(player1, updownplatform, touchit)
 
         this.physics.add.overlap(player1, fire, hitFire);
         this.physics.add.overlap(player2, fire, hitFire);
 
+        this.physics.add.overlap(player1, door, player1Crash);
+        
+        this.physics.add.overlap(player2, door, player2Crash);
+
+        // this.physics.add.collider(player1, door, player1Crash);
+        // this.physics.add.collider(player2, door, player2Crash);
 
         //this.physics.add.collider(diamond1, platforms);
         /*this.physics.add.overlap(player1, fire, this.hitFire);
@@ -274,9 +279,6 @@ class GameScene extends Phaser.Scene {
          console.log(updownplatform)
 
          //platforms.create(400,300,'over');
-         overpic = this.add.image(x, y, 'over');
-         overpic.setVisible(false);
-
     }
 
     update() {
@@ -323,12 +325,11 @@ class GameScene extends Phaser.Scene {
         if ((this.keyW.isDown)&&player2.body.onFloor()) {
             player2.setVelocityY(-330);
         }
-        if (doorCheck === true) {
+        if (doorCheck === true && pc1 === true && pc2 === true) {
             this.scene.start('Game_lv3');
         }
 
         if (gameover == true) {
-            overpic.setVisible(true);
             this.physics.pause();
         }
 
@@ -350,17 +351,20 @@ class GameScene extends Phaser.Scene {
     collectDiamond(player1, diamondtmep) {
         diamondtmep.disableBody(true, true);
         //diamond2.disableBody(true, true);
-
+        
         if (diamond1.countActive(true) === 0) {
             door.anims.play('doors', true);
-            this.nextLevel;
+            doorCheck = true;
+            //this.nextLevel;
+            // doorcheck = true;
         }
+        // if(doorcheck = true){}
     }
-    nextLevel(player1, player2, door) {
+   /* nextLevel(player1, player2, door) {
         if (diamond1.countActive(true) === 0) {
             doorCheck = true;
         }
-    }
+    }*/
 
     upPlatform(player, switchbutton) {
         //เช็กได้ละว่าปุ่มถูกเหยียบ
@@ -394,6 +398,14 @@ function touchit(player1, updownplatform){
     this.physics.collider(player1,platforms);
     up = true;
 }
-
+let pc1 = false;
+let pc2 = false;
+// let playerCrash;
+function player1Crash(player1, door){
+    pc1 = true;
+}
+function player2Crash(player2, door){
+    pc2 = true
+}
 
 export default GameScene;

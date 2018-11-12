@@ -3,7 +3,6 @@ import GameScene from './scenes/GameScene';
 import MainMenu from './scenes/MainMenu';
 import Game_lv2 from './scenes/Game_lv2';
 import Game_lv3 from './scenes/Game_lv3';
-import Game_speacial from './scenes/Game_speacial';
 
 const config = {
     // For more settings see <https://github.com/photonstorm/phaser/blob/master/src/boot/Config.js>
@@ -21,11 +20,10 @@ const config = {
         }
     },
     scene: [
-      //MainMenu,
-      //GameScene,
-      //Game_lv2,
-      Game_lv3
-      //Game_speacial
+        //MainMenu,
+       // GameScene,
+       Game_lv2,
+      // Game_lv3
     ]
 };
 

@@ -18,12 +18,6 @@ let diamond1;
 let diamond2;
 let doorCheck = false;
 
-let bgaudio;
-let jump;
-let collect;
-let die;
-let open;
-
 //import pic from '../../images/map';
 class GameScene extends Phaser.Scene {
     constructor(test) {
@@ -61,19 +55,10 @@ class GameScene extends Phaser.Scene {
         this.load.spritesheet('yang', '../../images/yang/eat1.png', { frameWidth: 80, frameHeight:107 });
         this.load.spritesheet('ying', '../../images/ying/walkying.png', { frameWidth: 85, frameHeight: 57 });
 
-        this.load.audio('bgaudio','../../sound/bg_music.mp3');
-        this.load.audio('jump','../../sound/jump.mp3');
-        this.load.audio('collect','../../sound/collect.mp3');
-        this.load.audio('die','../../sound/die.mp3');
-        this.load.audio('open','../../sound/open.mp3');
+
     }
 
     create() {
-          //ใส่เสียง
-          bgaudio = this.sound.add( 'bgaudio',  true);
-          bgaudio.play({ loop: true });
-          bgaudio.volume = -0.5;
-          
         width = this.scene.scene.physics.world.bounds.width;
         height = this.scene.scene.physics.world.bounds.height;
         x = width * 0.5;
