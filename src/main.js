@@ -24,8 +24,8 @@ const config = {
       //MainMenu,
       //GameScene,
       //Game_lv2,
-      //Game_lv3,
-      Game_speacial
+      Game_lv3
+      //Game_speacial
     ]
 };
 

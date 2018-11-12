@@ -84,6 +84,7 @@ class GameScene extends Phaser.Scene {
         this.load.image('resume', '../../images/button/resume.png');
         this.load.image('sound_on', '../../images/button/sound_on.png');
         this.load.image('sound_off', '../../images/button/sound_off.png');
+        this.load.image('game_over','../../images/Menu/game_over.png');
         
         this.load.audio('bgaudio','../../sound/bg_music.mp3');
         this.load.audio('jump','../../sound/jump.mp3');

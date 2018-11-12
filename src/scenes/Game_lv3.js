@@ -31,6 +31,8 @@ let collect;
 let die;
 let open;
 
+let overpic;
+
 class GameScene extends Phaser.Scene {
     constructor(test) {
         super({
@@ -54,7 +56,7 @@ class GameScene extends Phaser.Scene {
         this.load.image('diamond1', '../../images/items/diamond.png');
         this.load.image('diamond2', '../../images/items/diamond.png');
 
-        this.load.image('diamond', '../../images/items/dark_diamond.png');
+        this.load.image('dark_diamond', '../../images/items/dark_diamond.png');
         this.load.image('dark_diamond1', '../../images/items/dark_diamond.png');
         this.load.image('dark_diamond2', '../../images/items/dark_diamond.png');      
 
@@ -73,6 +75,7 @@ class GameScene extends Phaser.Scene {
         this.load.image('switch_uo_down', '../../images/map3_only/switch_uo_down.png');
         this.load.image('shadow31', '../../images/map3_only/shadow31.png');
         this.load.image('shadow32', '../../images/map3_only/shadow32.png');
+        this.load.image('over','../../images/gameov/game over.png');
 
         this.load.spritesheet('yang', '../../images/yang/walk1.png', { frameWidth: 78, frameHeight: 84 }); //white
         this.load.spritesheet('ying', '../../images/ying/walk.png', { frameWidth: 80, frameHeight: 84 }); //black
@@ -350,7 +353,8 @@ class GameScene extends Phaser.Scene {
 
             playimage6 = this.add.image(380,410, 'menu');
         });
-
+        overpic = this.add.image(x, y, 'over');
+         overpic.setVisible(false);
     }
 
     update() {
@@ -390,7 +394,7 @@ class GameScene extends Phaser.Scene {
         }
 
         if (gameover == true) {
-            this.add.image(400, 300, 'game_over');
+            overpic.setVisible(true);
             this.physics.pause();
         }
 

@@ -8,6 +8,7 @@ let platforms;
 let player;
 let gameover = false;
 let cursors;
+let ov = false;
 
 let player1;
 let player2;
@@ -22,13 +23,9 @@ let switchbutton;
 let updownplatform;
 let platformisup = false;
 let fire;
-let playimage1, playimage2, playimage3, playimage4, playimage5, playimage6;
+let shadow;
 
-let bgaudio;
-let jump;
-let collect;
-let die;
-let open;
+let overpic;
 
 class GameScene extends Phaser.Scene {
     constructor(test) {
@@ -59,37 +56,22 @@ class GameScene extends Phaser.Scene {
         this.load.image('fog', '../../images/map2_only/fog.png');
         this.load.image('switch', '../../images/map2_only/switch.png');
         this.load.image('updown', '../../images/map2_only/updown.png');
+        this.load.image('over','../../images/gameov/game over.png');
 
         this.load.spritesheet('yang', '../../images/yang/ya1.png', { frameWidth: 85, frameHeight: 113 }); //white
         this.load.spritesheet('ying', '../../images/ying/yi3.png', { frameWidth: 80, frameHeight: 90 }); //black
 
-        this.load.image('setting', '../../images/button/setting.png');
-        this.load.image('setting_point', '../../images/button/setting_point.png');
-        this.load.image('setting_page', '../../images/button/setting_page.png');
-        this.load.image('menu', '../../images/button/menu.png');
-        this.load.image('resume', '../../images/button/resume.png');
-        this.load.image('sound_on', '../../images/button/sound_on.png');
-        this.load.image('sound_off', '../../images/button/sound_off.png');
-        this.load.image('game_over','../../images/Menu/game_over.png');
 
-        this.load.audio('bgaudio','../../sound/bg_music.mp3');
-        this.load.audio('jump','../../sound/jump.mp3');
-        this.load.audio('collect','../../sound/collect.mp3');
-        this.load.audio('die','../../sound/die.mp3');
-        this.load.audio('open','../../sound/open.mp3');
     }
 
     create() {
-             //ใส่เสียง
-             bgaudio = this.sound.add( 'bgaudio',  true);
-             bgaudio.play({ loop: true });
-             bgaudio.volume = -0.5;
-             
 
         let width = this.scene.scene.physics.world.bounds.width;
         let height = this.scene.scene.physics.world.bounds.height;
         let x = width * 0.5;
         let y = height * 0.5;
+
+        //this.add.image(x,y,'over');
 
         this.add.image(x, y, 'bg');
         width = this.scene.scene.physics.world.bounds.width;
@@ -97,22 +79,26 @@ class GameScene extends Phaser.Scene {
         x = width * 0.5;
         y = height * 0.5;
 
-        this.add.image(x, y, 'bg');
+        //this.add.image(x, y, 'bg');
 
         let platforms = this.physics.add.staticGroup();
+
+        
 
         platforms.create(10, 570, 'ground');
         platforms.create(400, 570, 'ground');
 
         platforms.create(x, 400, 'long_path');
-        platforms.create(x, 200, 'long_path');
+        platforms.create(x, 250, 'long_path');
 
-        platforms.create(x, 240, 'lamp_off');
+        //platforms.create(x, 240, 'lamp_off');
         // this.add.image(x, y, 'fog');
-        this.add.image(x, y, 'shadow');
+        //this.add.image(x, y, 'shadow');
 
         platforms.create(100, 100, 'long_path');
         platforms.create(750, 350, 'short_path');
+        console.log(platforms.children[0])
+        
         //platforms.create(750, 335, 'switch');
 
 
@@ -121,9 +107,11 @@ class GameScene extends Phaser.Scene {
         //สวิตช์กับแพลตฟอร์ม
         switchbutton = this.physics.add.staticImage(750, 333, 'switch');
         updownplatform = this.physics.add.sprite(100, 200, 'updown')
-        console.log(updownplatform.body.allowGravity = false)
-        //updownplatform.create(100, 400, 'updown');
+        updownplatform.body.allowGravity = false
+        updownplatform.setImmovable(true)
 
+        //updownplatform.create(100, 400, 'updown');
+        updownplatform.setCollideWorldBounds(true);
         door = this.add.sprite(750, 485, 'door');
 
         player1 = this.physics.add.image(100, 500, 'yang').setScale(0.5); //white
@@ -138,8 +126,8 @@ class GameScene extends Phaser.Scene {
         this.physics.add.collider(player1, platforms);
         this.physics.add.collider(player2, platforms);
 
-        this.physics.add.collider(player1, updownplatform,null);
-        this.physics.add.collider(player2, updownplatform,null);
+        this.physics.add.collider(player1, updownplatform,this.hitUpdown);
+        this.physics.add.collider(player2, updownplatform,this.hitUpdown);
 
         cursors = this.input.keyboard.createCursorKeys();
 
@@ -166,6 +154,9 @@ class GameScene extends Phaser.Scene {
         //this.physics.add.collider(diamond1, platforms);
         this.physics.add.overlap(player1, diamond1, this.collectDiamond);
         this.physics.add.overlap(player1, player2, this.nextLevel);
+
+        /*this.physics.add.overlap(player1,updownplatform,this.hitUpdown)
+        this.physics.add.overlap(player2,updownplatform,this.hitUpdown)*/
 
         //diamond2
         /*diamond2 = this.physics.add.group();
@@ -215,9 +206,17 @@ class GameScene extends Phaser.Scene {
         this.physics.add.overlap(player1, switchbutton, this.upPlatform);
         this.physics.add.overlap(player2, switchbutton, this.upPlatform);
         //console.log(switchbutton.onOverlap)
+
+        /*this.physics.add.overlap(player1, updownplatform, this.upPlatform);
+        this.physics.add.overlap(player2, updownplatform, this.upPlatform);*/
+
+        shadow = this.physics.add.staticImage(x,y+25,'shadow').setScale(0.7,0.7);
+        this.physics.add.collider(player1,shadow,hitShadow);
+        this.physics.add.overlap(player1,platforms,hitUpdown);
+
         fire = this.physics.add.image(400, 400, 'fire');
         this.physics.add.collider(fire, platforms);
-
+        // this.physics.add.collider(player1, updownplatform, touchit)
 
         this.physics.add.overlap(player1, fire, hitFire);
         this.physics.add.overlap(player2, fire, hitFire);
@@ -274,27 +273,9 @@ class GameScene extends Phaser.Scene {
 
          console.log(updownplatform)
 
-         playimage1 = this.add.image(770, 30, 'setting');
-         playimage1.setInteractive();
-         playimage1.input.useHandCursor = true;
-         playimage1.on ('pointerup', () => { 
-             playimage2 = this.add.image(x, y, 'setting_page');
-             playimage2.setInteractive();
- 
-             playimage3 = this.add.image(380,210, 'sound_on');
-             playimage3.setInteractive();
- 
-             playimage4 = this.add.image(380,270, 'sound_off');
-             playimage4.setInteractive();
- 
-             playimage5 = this.add.image(380,350, 'resume');
-             playimage5.setInteractive();
-             playimage5.on ('pointerup', () => {
-                 this.input.on('gameobjectup',clickHandler, this);
-             });
- 
-             playimage6 = this.add.image(380,410, 'menu');
-         });
+         //platforms.create(400,300,'over');
+         overpic = this.add.image(x, y, 'over');
+         overpic.setVisible(false);
 
     }
 
@@ -310,9 +291,21 @@ class GameScene extends Phaser.Scene {
             player1.setVelocityX(0);
 
         }
-        if (cursors.up.isDown && player1.body.onFloor()) {
+        // if ((cursors.up.isDown && player1.body.onFloor())|| player1.hitUpdown) {
+        //     player1.setVelocityY(-330);
+        // }
+        // if ((cursors.up.isDown && player1.body.onFloor())) {
+        //     player1.setVelocityY(-330);
+        // }
+        
+        if((cursors.up.isDown && player1.body.onFloor())){
             player1.setVelocityY(-330);
         }
+
+        // if (cursors.up.isDown && touch === false) {
+        //     console.log('sa')
+        //     player1.setVelocityY(-330);
+        // }
 
 
         //control ying
@@ -327,7 +320,7 @@ class GameScene extends Phaser.Scene {
         } else {
             player2.setVelocityX(0);
         }
-        if (this.keyW.isDown && player2.body.onFloor()) {
+        if ((this.keyW.isDown)&&player2.body.onFloor()) {
             player2.setVelocityY(-330);
         }
         if (doorCheck === true) {
@@ -335,7 +328,7 @@ class GameScene extends Phaser.Scene {
         }
 
         if (gameover == true) {
-            this.add.image(400, 300, 'game_over');
+            overpic.setVisible(true);
             this.physics.pause();
         }
 
@@ -345,16 +338,9 @@ class GameScene extends Phaser.Scene {
                 updownplatform.setVelocityY(100)
             }
             else if (updownplatform.y > 400) {
-                updownplatform.setVelocityY(-100)
+                updownplatform.setVelocityY(-300)
             }
-        } else {
-            if (updownplatform.y <= 200) {
-                updownplatform.setVelocityY(0)
-            } else {
-                updownplatform.setVelocityY(100)
-
-            }
-        }
+        } 
 
 
         //ยังหาค่า y ของ updownplatform ไม่เจอ น่าจะต้องแก้ตัว updownplatform เป็น Object ชนิดอื่น
@@ -387,16 +373,27 @@ class GameScene extends Phaser.Scene {
 
 }
 
-function hitFire(player1, fire) {
+let up=false;
+function hitUpdown(player1,platform){
+    console.log("hits")
+    up = true;
+}
+
+function hitShadow(player1,shadow){
+    console.log("hits")
+    gameover = true;
+}
+
+function hitFire(player, fire) {
     console.log("hit")
     gameover = true;
 }
-function clickHandler () {
-    playimage2.setVisible(false);
-    playimage3.setVisible(false);
-    playimage4.setVisible(false);
-    playimage5.setVisible(false);
-    playimage6.setVisible(false);
+
+let touch = false;
+function touchit(player1, updownplatform){
+    this.physics.collider(player1,platforms);
+    up = true;
 }
+
 
 export default GameScene;
